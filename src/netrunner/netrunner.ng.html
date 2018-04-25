@@ -1,0 +1,33 @@
+<div class="netrunner-cmp container-fluid">
+  <h3> Don't Cheat on Dat </h3>
+  <form class="netrunner-search" #cardSearch="ngForm">
+    <span class="input-group">
+      <input style="width: 80%;" class="form-control" type="text" name="searchText" 
+       title="Filter out netrunner cards, figure out what the fuck is legal"
+       placeholder="Search for a netrunner Cards"
+       [ngModel]="searchText"
+       (ngModelChange)="searchCards($event)"
+      >
+    </span>
+  </form>
+
+  <div>
+    Total Cards: {{allCards?.length}}
+  </div>
+  <div>
+    <h4>Matching Count: {{matchedCards?.length}}</h4>
+    <div *ngIf="matchedCards && matchedCards?.length > 0">
+      <div *ngFor="let card of matchedCards">
+        <card-cmp [card]="card"></card-cmp>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h4>Banned Count: {{matchedBans?.length}}</h4>
+    <div *ngIf="matchedBans && matchedBans?.length > 0">
+      <div class="row" *ngFor="let card of matchedBans">
+        <card-cmp [card]="card"></card-cmp>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="card-cmp">
+  <span *ngIf="card">
+    <span class="col-md-3">{{card.title}}</span>
+    <span class="col-md-2">{{card.faction_code}}</span>
+    <span class="col-md-2">{{card?.pack?.cycle?.name}}</span>
+    <span class="col-md-2">{{card.faction_cost}}</span>
+  </span>
+  <!-- Could add the image but that is a lot of extra size & data -->
+</div>
