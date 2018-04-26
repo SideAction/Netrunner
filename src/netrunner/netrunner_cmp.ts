@@ -67,6 +67,7 @@ export class NetrunnerCmp implements OnInit {
             re = new RegExp(textToFind, 'igm');
         } catch (err) {
             this.errMsg = 'Invalid Regex';
+            console.error("Invalid regex detected in textToFind");
         }
         let matchingCards  = _.filter(cards, card => {
             return card.match(textToFind, re, this.searchFullText);

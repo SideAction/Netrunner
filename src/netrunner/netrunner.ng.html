@@ -8,6 +8,7 @@
        [ngModel]="searchText"
        (ngModelChange)="searchCards($event)"
       >
+      <span class="error" *ngIf="errMsg">{{errMsg}}</span>
     </span>
 
     <label>
