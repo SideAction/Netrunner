@@ -15,6 +15,25 @@ export class NetrunnerService {
 
     }
 
+    public getDistinctNamedCards() {
+        let allCards: Array<Card> = this.determineCardLegality();
+        let legalCards = this.getRevisedCoreCards(allCards);
+        let bannedCards = this.getBannedCoreCards(allCards);
+ 
+        let distinctLookup = _.groupBy(legalCards, 'title');
+        _.each(bannedCards, bc => {
+            if (!distinctLookup[bc.title]) {
+                distinctLookup[bc.title] = bc;
+            }   
+        });
+        let combinedDistinct = [];
+        _.each(distinctLookup, (card, key) => {
+            combinedDistinct.push(_.isArray(card) ? card[0] : card);
+        });
+		return combinedDistinct;
+    }
+
+
     public determineLegalPacks(packs: Array<Pack> = null, cycles: Array<Cycle> = null) {
         cycles = cycles || this.getCycleInstances();
         packs = packs || this.getPackInstances();
@@ -44,6 +63,7 @@ export class NetrunnerService {
             } else {
                 console.error("What the fuck, no pack found for this card?", card);
             }
+            card.fullText = card.buildFullText(); // One time cost, build out the search text
         });
         return cards;
     }

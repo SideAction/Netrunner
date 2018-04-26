@@ -9,8 +9,10 @@ export class Cycle {
     public size: number; // Number of packs
     public rotated: boolean; // Is it out of rotation
 
+    public raw: any;
     constructor(raw) {
         Object.assign(this, raw);
+        this.raw = raw || {};
     }
 }
 
@@ -28,8 +30,10 @@ export class Pack {
     // This is calculated from the cycle it belongs to, you have to lookup cycle_code -> cycle.code
     public cycle: Cycle;
 
+    public raw: any;
     constructor(raw) {
         Object.assign(this, raw);
+        this.raw = raw || {};
     }
 }
 
@@ -53,6 +57,7 @@ export class Card {
     public uniqueness: boolean; // wtf is this?
 
     public text: string;
+    public fullText: string;
     // "Draft format only. If you have more [jinteki] cards rezzed than any other faction, when
     // your turn begins, you may swap 2 pieces of installed ice."
     public pack: Pack;
@@ -61,9 +66,34 @@ export class Card {
     // reference against CORE
     public can_play: boolean = false;
 
+    public raw: any;
     constructor(raw) {
         Object.assign(this, raw);
-
         this.title_lower = this.title ? this.title.toLowerCase() : '';
+        this.raw = raw || {};
+    }
+
+    public buildFullText() {
+        let text: string = _.compact(_.values(this.raw)).join(' ') + ' ';
+        if (this.pack) {
+            text += _.compact(_.values(this.pack.raw || {})).join(' ') + ' ';
+            if (this.pack.cycle) {
+                text += _.compact(_.values(this.pack.cycle.raw)).join(' ') + ' ';
+            }
+        }
+        return text;
+    }
+
+    public match(textString: string, re: RegExp, fullTextSearch = false) {
+        if (re) {
+            if (this.fullText && fullTextSearch) {
+                return re.test(this.fullText);
+            } else {
+                return re.test(this.title);
+            }
+        } else if (textString) {
+            return this.title.match(textString);
+        }
+        return false;
     }
 }

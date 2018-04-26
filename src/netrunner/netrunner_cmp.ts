@@ -27,6 +27,9 @@ export class NetrunnerCmp implements OnInit {
     public matchedCards: Array<Card>;
     public matchedBans: Array<Card>;
 
+    public searchFullText: boolean = false;
+    public errMsg: string;
+
     constructor(public _netrunnerService: NetrunnerService) {
 
     }
@@ -40,10 +43,7 @@ export class NetrunnerCmp implements OnInit {
     }
 
     public loadCards() {
-        let allCards: Array<Card> = this._netrunnerService.determineCardLegality();
-        this.legalCards = this._netrunnerService.getRevisedCoreCards(allCards);
-        this.bannedCards = this._netrunnerService.getBannedCoreCards(allCards);
-        this.allCards = allCards;
+        this.allCards = this._netrunnerService.getDistinctNamedCards();
     }
 
     public searchCards(textToFind: string) {
@@ -55,21 +55,21 @@ export class NetrunnerCmp implements OnInit {
             if (!_.isString(textToFind) || textToFind.length === 0) {
                 return;
             }
-
-            this.matchedCards = this.checkCards(this.legalCards, textToFind, 20);
-            console.log("Matched cards len, legalCards Length.", this.matchedCards.length, this.legalCards.length);
-            if (_.isEmpty(this.matchedCards)) {
-                this.matchedBans = this.checkCards(this.bannedCards, textToFind, 20);
-                console.log("Matched banned cards len, legalCards Length.", this.matchedBans.length, this.bannedCards.length);
-            }
+            this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
         }, 10);
     }
 
     public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {
         console.log("Searching for cards with: ", textToFind);
-        let re = new RegExp(textToFind, 'igm');
+        this.errMsg = null;
+        let re = null;
+        try {
+            re = new RegExp(textToFind, 'igm');
+        } catch(err) {
+            this.errMsg = 'Invalid Regex';
+        }
         let matchingCards  = _.filter(cards, card => {
-            return re.test(card.title);
+            return card.match(textToFind, re, this.searchFullText);
         });
         return matchingCards && matchingCards.length > limit ? matchingCards.slice(0, limit) : matchingCards;
     }

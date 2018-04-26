@@ -9,6 +9,15 @@
        (ngModelChange)="searchCards($event)"
       >
     </span>
+
+    <label>
+      <input name="searchFullText" type="radio" [value]="false"  [(ngModel)]="searchFullText">
+      Title Search
+    </label>
+    <label>
+      <input name="searchFullText" type="radio" [value]="true"  [(ngModel)]="searchFullText">
+      Full Text
+    </label>
   </form>
 
   <div>
@@ -18,14 +27,6 @@
     <h4>Matching Count: {{matchedCards?.length}}</h4>
     <div *ngIf="matchedCards && matchedCards?.length > 0">
       <div *ngFor="let card of matchedCards">
-        <card-cmp [card]="card"></card-cmp>
-      </div>
-    </div>
-  </div>
-  <div>
-    <h4>Banned Count: {{matchedBans?.length}}</h4>
-    <div *ngIf="matchedBans && matchedBans?.length > 0">
-      <div class="row" *ngFor="let card of matchedBans">
         <card-cmp [card]="card"></card-cmp>
       </div>
     </div>
