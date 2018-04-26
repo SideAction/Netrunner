@@ -39,7 +39,7 @@ fdescribe('TestingCardCmp', () => {
         return _.get(service.getCards(), 'total');
     }
 
-    it('Should create a netrunner component', () => {
+    it('Should create a Card component', () => {
         expect(comp).toBeDefined("We should have the Netrunner comp");
         expect(el).toBeDefined("We should have a top level element");
 
@@ -49,7 +49,6 @@ fdescribe('TestingCardCmp', () => {
         let card = new Card({title: 'test', faction_code: 'test_faction'});
         comp.card = card;
         fixture.detectChanges();
-
         expect($('.card-details').length).toBe(1, "It should be rendered at this point");
     });
 

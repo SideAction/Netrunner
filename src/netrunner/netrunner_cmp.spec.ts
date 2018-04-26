@@ -39,7 +39,6 @@ fdescribe('TestingNetrunnerCmp', () => {
         expect(comp).toBeDefined("We should have the Netrunner comp");
         expect(el).toBeDefined("We should have a top level element");
     });
-    
     // Needs more
 });
 

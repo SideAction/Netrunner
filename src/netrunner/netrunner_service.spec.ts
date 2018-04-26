@@ -104,7 +104,7 @@ fdescribe('TestingNetrunnerService', () => {
         let bannedCards = service.getBannedCoreCards();
         let legalCards = service.getRevisedCoreCards();
 
-        expect(mergedCards.length < allCards.length).toBe(true, 
+        expect(mergedCards.length < allCards.length).toBe(true,
             "We should have a lot of cards, but definitely some are banned"
         );
 

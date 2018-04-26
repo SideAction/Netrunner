@@ -19,18 +19,18 @@ export class NetrunnerService {
         let allCards: Array<Card> = this.determineCardLegality();
         let legalCards = this.getRevisedCoreCards(allCards);
         let bannedCards = this.getBannedCoreCards(allCards);
- 
+
         let distinctLookup = _.groupBy(legalCards, 'title');
         _.each(bannedCards, bc => {
             if (!distinctLookup[bc.title]) {
                 distinctLookup[bc.title] = bc;
-            }   
+            }
         });
         let combinedDistinct = [];
         _.each(distinctLookup, (card, key) => {
             combinedDistinct.push(_.isArray(card) ? card[0] : card);
         });
-		return combinedDistinct;
+        return combinedDistinct;
     }
 
 
