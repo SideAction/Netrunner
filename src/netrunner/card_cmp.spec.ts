@@ -65,7 +65,7 @@ fdescribe('TestingCardCmp', () => {
 
         comp.showImage = true;
         fixture.detectChanges();
-        expect($('.card-img').length).toBe(1, "By default we should NOT be showing an image");
+        expect($('.card-img').length).toBe(1, "Now we should be showing an image.");
     });
 
 });

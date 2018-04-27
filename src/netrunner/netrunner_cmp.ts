@@ -26,7 +26,6 @@ export class NetrunnerCmp implements OnInit {
     public cycles: Array<Cycle>;
     public packs: Array<Pack>;
     public matchedCards: Array<Card>;
-    public matchedBans: Array<Card>;
 
     public searchFullText: boolean = false;
     public errMsg: string;
@@ -52,40 +51,41 @@ export class NetrunnerCmp implements OnInit {
     }
 
     public searchCards(textToFind: string) {
-        this.matchedBans = null;
         this.matchedCards = null;
 
+        console.log("Search text", textToFind);
+        if (!_.isString(textToFind) || textToFind.length === 0) {
+            return;
+        }
         // Set the last search call, then setup a timeout to check when we should show images.
         this.lastSearchTime = moment();
         this.resetVisibleImages();
 
-        console.log("Search text", textToFind);
+        // Could just make this a debounce, not sure if _.debounce plays nice with digest loops yet
         setTimeout(() => {
-            if (!_.isString(textToFind) || textToFind.length === 0) {
-                return;
-            }
             this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
-        }, 10);
+        }, 100);
     }
 
     // Assume we would like to show the images, so just check a little after the visibility should be present
     public resetVisibleImages() {
         this.showImages = false;
         setTimeout(() => {
-            this.loadImageDelay(this.imageDelayInSeconds);
+            this.showImages = this.showImagesAfterDelay(this.imageDelayInSeconds);
         }, ((this.imageDelayInSeconds * 1000) + 200));
     }
 
-    public loadImageDelay(delayImageLoadInSeconds: number) {
+    public showImagesAfterDelay(delayImageLoadInSeconds: number) {
         console.log("Check image delay", this.imageDelayInSeconds);
         if (this.lastSearchTime) {
             let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds()
             if (seconds >= delayImageLoadInSeconds) {
-                this.showImages = true;
+                return true;
             } else {
-                this.showImages = false;
+                return false;
             }
         }
+        return false;
     }
 
     public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {
