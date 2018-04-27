@@ -6,6 +6,7 @@ import {NetrunnerService} from './netrunner_service';
 import {Cycle, Pack, Card} from './types';
 
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
     selector: 'netrunner-cmp',
@@ -30,6 +31,11 @@ export class NetrunnerCmp implements OnInit {
     public searchFullText: boolean = false;
     public errMsg: string;
 
+    // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
+    @Input() imageDelayInSeconds: number = 5;
+    public showImages = false;
+    public lastSearchTime: moment.Moment;
+
     constructor(public _netrunnerService: NetrunnerService) {
 
     }
@@ -39,7 +45,6 @@ export class NetrunnerCmp implements OnInit {
         if (!this.allCards) { // Useful if you want to test specific cases
             this.loadCards();
         }
-        // this.setupFilter();
     }
 
     public loadCards() {
@@ -50,6 +55,10 @@ export class NetrunnerCmp implements OnInit {
         this.matchedBans = null;
         this.matchedCards = null;
 
+        // Set the last search call, then setup a timeout to check when we should show images.
+        this.lastSearchTime = moment();
+        this.resetVisibleImages();
+
         console.log("Search text", textToFind);
         setTimeout(() => {
             if (!_.isString(textToFind) || textToFind.length === 0) {
@@ -57,6 +66,26 @@ export class NetrunnerCmp implements OnInit {
             }
             this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
         }, 10);
+    }
+
+    // Assume we would like to show the images, so just check a little after the visibility should be present
+    public resetVisibleImages() {
+        this.showImages = false;
+        setTimeout(() => {
+            this.loadImageDelay(this.imageDelayInSeconds);
+        }, ((this.imageDelayInSeconds * 1000) + 200));
+    }
+
+    public loadImageDelay(delayImageLoadInSeconds: number) {
+        console.log("Check image delay", this.imageDelayInSeconds);
+        if (this.lastSearchTime) {
+            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds()
+            if (seconds >= delayImageLoadInSeconds) {
+                this.showImages = true;
+            } else {
+                this.showImages = false;
+            }
+        }
     }
 
     public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {

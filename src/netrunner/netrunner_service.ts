@@ -64,6 +64,7 @@ export class NetrunnerService {
                 console.error("What the fuck, no pack found for this card?", card);
             }
             card.fullText = card.buildFullText(); // One time cost, build out the search text
+            card.image_url = card.getImageUrl(_.get(this.getCards(), 'imageUrlTemplate'));
         });
         return cards;
     }

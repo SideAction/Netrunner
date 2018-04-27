@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 export class CardCmp implements OnInit {
 
     @Input() card: Card;
+    @Input() showImage: boolean = false;
 
     constructor(public _netrunnerService: NetrunnerService) {
 

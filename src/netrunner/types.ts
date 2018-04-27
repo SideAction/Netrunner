@@ -58,6 +58,7 @@ export class Card {
 
     public text: string;
     public fullText: string;
+    public image_url: string;
     // "Draft format only. If you have more [jinteki] cards rezzed than any other faction, when
     // your turn begins, you may swap 2 pieces of installed ice."
     public pack: Pack;
@@ -82,6 +83,11 @@ export class Card {
             }
         }
         return text;
+    }
+
+    // Some cards have an image_url set, many older ones require the urlTemplate evaluation
+    public getImageUrl(url: string) {
+        return this.image_url || (_.isString(url) ? url.replace('{code}', this.code) : '');
     }
 
     public match(textString: string, re: RegExp, fullTextSearch = false) {
