@@ -4,17 +4,17 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {DebugElement} from '@angular/core';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import {NetrunnerCmp} from './netrunner_cmp';
+import {CardCmp} from './card_cmp';
 import {NetrunnerService} from './netrunner_service';
 import {NetrunnerModule} from './netrunner_module';
 import {Card, Cycle, Pack} from './types';
 
 import * as _ from 'lodash';
 declare var $;
-fdescribe('TestingNetrunnerCmp', () => {
-    let fixture: ComponentFixture<NetrunnerCmp>;
+fdescribe('TestingCardCmp', () => {
+    let fixture: ComponentFixture<CardCmp>;
     let service: NetrunnerService;
-    let comp: NetrunnerCmp;
+    let comp: CardCmp;
     let el: HTMLElement;
     let de: DebugElement;
 
@@ -28,17 +28,29 @@ fdescribe('TestingNetrunnerCmp', () => {
         }).compileComponents();
 
         service = TestBed.get(NetrunnerService);
-        fixture = TestBed.createComponent(NetrunnerCmp);
+        fixture = TestBed.createComponent(CardCmp);
         comp = fixture.componentInstance;
 
-        de = fixture.debugElement.query(By.css('.netrunner-cmp'));
+        de = fixture.debugElement.query(By.css('.card-cmp'));
         el = de.nativeElement;
     }));
 
-    it('Should create a netrunner component', () => {
+    function getTotalCards() {
+        return _.get(service.getCards(), 'total');
+    }
+
+    it('Should create a Card component', () => {
         expect(comp).toBeDefined("We should have the Netrunner comp");
         expect(el).toBeDefined("We should have a top level element");
+
     });
-    // Needs more
+
+    it('Should be able to render a card without exploading and also have a class based on can_play', () => {
+        let card = new Card({title: 'test', faction_code: 'test_faction'});
+        comp.card = card;
+        fixture.detectChanges();
+        expect($('.card-details').length).toBe(1, "It should be rendered at this point");
+    });
+
 });
 
