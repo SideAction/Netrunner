@@ -1,154 +1,158 @@
-Reina Roja 
-Quetzal
-1x Queen's Gambit
-1x Quest Completed
-2x Retrieval Run
-1x Run Amok
-1x Stimhack
-2x Cyberfeeder
-2x Patchwork
-1x Ice Carver
-2x Liberated Account
-2x Scrubber
-1x Xanadu
-3x Corroder
-2x Force of Nature
-3x Mimic
-2x Datasucker
-2x Imp
-2x Lamprey
-Gabriel Santiago
-Leela Patel
-1x Career Fair
-2x Easy Mark
-1x Emergency Shutdown
-1x Hostage
-2x Inside Job
-2x Legwork
-1x Networking
-1x Spear Phishing
-2x Special Order
-1x HQ Interface
-2x Paragon
-2x Bank Job
-1x Data Dealer
-3x Abagnale
-2x Demara
-2x Faerie
-2x Femme Fatale
-2x Sneakdoor Beta
-                                       
-Chaos Theory
-Rielle Kit Peddler
-2x Diesel
-2x Modded
-1x Notoriety
-1x Test Run
-2x The Maker's Eye
-2x Tinkering
-1x Akamatsu Mem Chip
-2x Dinosaurus
-1x R&D Interface
-2x Aesop's Pawnshop
-2x Ice Analyzer
-2x Professional Contacts
-1x Atman
-3x Battering Ram
-1x Deus X
-3x Gordian Blade
-2x Pipeline
-Neutral Runner
-2x Dirty Laundry
-3x Sure Gamble
-2x Armitage Codebusting
-2x Earthrise Hotel
-2x John Masanori
-2x Kati Jones
-2x Crypsis
-                          
-Stronger Together 
-Seidr Laboratories
-3x Project Vitruvius
-2x Successful Field Test
-3x Adonis Campaign
-1x Aggressive Secretary
-2x Marilyn Campaign
-2x Ash 2X3ZB9CY
-1x Mason Bellamy
-1x Archived Memories
-2x Biotic Labor
-2x Blue Level Clearance
-2x Eli 1.0
-1x Heimdall 1.0
-1x Turing
-2x Viktor 1.0
-2x Ichi 1.0
-2x Rototurret
-Personal Evolution
-Replicating Perfection
-2x Fetal AI
-2x Nisei MK II
-1x Philotic Entanglement
-2x Project Junebug
-2x Ronin
-2x Snare!
-1x Sundew
-2x Hokusai Grid
-2x Celebrity Gift
-2x Neural EMP
-1x Trick of Light
-1x Himitsu-Bako
-1x Wall of Thorns
-1x Lotus Field
-2x Yagura
-2x Neural Katana
-1x Swordsman
-2x Tsurugi
-                                       
-NBN Weyland
-Neutral Corp
-2x Paper Trail
-2x Priority Requisition
-3x PAD Campaign
-3x Hedge Fund
-2x IPO
-3x Wall of Static
-3x Enigma
-2x Hunter
-Making News
-Spark Agency
-2x Explode-a-palooza
-3x Project Beale
-2x Daily Business Show
-1x Ghost Branch
-2x Marked Accounts
-1x Reversed Accounts
-2x Product Placement
-2x Red Herrings
-2x Closed Accounts
-1x Psychographics
-2x SEA Source
-1x Wraparound
-3x Pop-up Window
-2x Tollbooth
-2x Data Raven
-1x Flare
-Consortium
-Building a Better World
-Blue Sun
-2x Hostile Takeover
-1x Oaktown Renovation
-3x Project Atlas
-2x Contract Killer
-1x Elizabeth Mills
-2x Public Support
-1x Crisium Grid
-3x Beanstalk Royalties
-2x Oversight AI
-2x Punitive Counterstrike
-1x Hadrian's Wall
-2x Ice Wall
-2x Spiderweb
-1x Hortum
-2x Archer
-2x Caduceus
+
+{
+    "Runner": [
+        "Reina Roja",
+        "Quetzal",
+        "Queen's Gambit",
+        "Quest Completed",
+        "Retrieval Run",
+        "Run Amok",
+        "Stimhack",
+        "Cyberfeeder",
+        "Patchwork",
+        "Ice Carver",
+        "Liberated Account",
+        "Scrubber",
+        "Xanadu",
+        "Corroder",
+        "Force of Nature",
+        "Mimic",
+        "Datasucker",
+        "Imp",
+        "Lamprey",
+        "Gabriel Santiago",
+        "Leela Patel",
+        "Career Fair",
+        "Easy Mark",
+        "Emergency Shutdown",
+        "Hostage",
+        "Inside Job",
+        "Legwork",
+        "Networking",
+        "Spear Phishing",
+        "Special Order",
+        "HQ Interface",
+        "Paragon",
+        "Bank Job",
+        "Data Dealer",
+        "Abagnale",
+        "Demara",
+        "Faerie",
+        "Femme Fatale",
+        "Sneakdoor Beta"
+    ],
+    "Corp": [
+        "Chaos Theory",
+        "Rielle Kit Peddler",
+        "Diesel",
+        "Modded",
+        "Notoriety",
+        "Test Run",
+        "The Maker's Eye",
+        "Tinkering",
+        "Akamatsu Mem Chip",
+        "Dinosaurus",
+        "R&D Interface",
+        "Aesop's Pawnshop",
+        "Ice Analyzer",
+        "Professional Contacts",
+        "Atman",
+        "Battering Ram",
+        "Deus X",
+        "Gordian Blade",
+        "Pipeline",
+        "Neutral Runner",
+        "Dirty Laundry",
+        "Sure Gamble",
+        "Armitage Codebusting",
+        "Earthrise Hotel",
+        "John Masanori",
+        "Kati Jones",
+        "Crypsis",
+        "Stronger Together",
+        "Seidr Laboratories",
+        "Project Vitruvius",
+        "Successful Field Test",
+        "Adonis Campaign",
+        "Aggressive Secretary",
+        "Marilyn Campaign",
+        "Ash 2X3ZB9CY",
+        "Mason Bellamy",
+        "Archived Memories",
+        "Biotic Labor",
+        "Blue Level Clearance",
+        "Eli 1.0",
+        "Heimdall 1.0",
+        "Turing",
+        "Viktor 1.0",
+        "Ichi 1.0",
+        "Rototurret",
+        "Personal Evolution",
+        "Replicating Perfection",
+        "Fetal AI",
+        "Nisei MK II",
+        "Philotic Entanglement",
+        "Project Junebug",
+        "Ronin",
+        "Snare!",
+        "Sundew",
+        "Hokusai Grid",
+        "Celebrity Gift",
+        "Neural EMP",
+        "Trick of Light",
+        "Himitsu-Bako",
+        "Wall of Thorns",
+        "Lotus Field",
+        "Yagura",
+        "Neural Katana",
+        "Swordsman",
+        "Tsurugi",
+        "NBN Weyland",
+        "Neutral Corp",
+        "Paper Trail",
+        "Priority Requisition",
+        "PAD Campaign",
+        "Hedge Fund",
+        "IPO",
+        "Wall of Static",
+        "Enigma",
+        "Hunter",
+        "Making News",
+        "Spark Agency",
+        "Explode-a-palooza",
+        "Project Beale",
+        "Daily Business Show",
+        "Ghost Branch",
+        "Marked Accounts",
+        "Reversed Accounts",
+        "Product Placement",
+        "Red Herrings",
+        "Closed Accounts",
+        "Psychographics",
+        "SEA Source",
+        "Wraparound",
+        "Pop-up Window",
+        "Tollbooth",
+        "Data Raven",
+        "Flare",
+        "Consortium",
+        "Building a Better World",
+        "Blue Sun",
+        "Hostile Takeover",
+        "Oaktown Renovation",
+        "Project Atlas",
+        "Contract Killer",
+        "Elizabeth Mills",
+        "Public Support",
+        "Crisium Grid",
+        "Beanstalk Royalties",
+        "Oversight AI",
+        "Punitive Counterstrike",
+        "Hadrian's Wall",
+        "Ice Wall",
+        "Spiderweb",
+        "Hortum",
+        "Archer",
+        "Caduceus"
+    ]
+}
