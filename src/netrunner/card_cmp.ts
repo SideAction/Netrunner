@@ -1,7 +1,4 @@
 import {OnInit, ViewChild, Component, EventEmitter, Input, Output, HostListener} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
-
 import {NetrunnerService} from './netrunner_service';
 import {Cycle, Pack, Card} from './types';
 
@@ -14,6 +11,7 @@ import * as _ from 'lodash';
 export class CardCmp implements OnInit {
 
     @Input() card: Card;
+    @Input() showImage: boolean = false;
 
     constructor(public _netrunnerService: NetrunnerService) {
 

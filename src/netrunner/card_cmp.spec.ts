@@ -52,5 +52,21 @@ fdescribe('TestingCardCmp', () => {
         expect($('.card-details').length).toBe(1, "It should be rendered at this point");
     });
 
+    it("Should not show the image by default, and cards should eval the two types of imageUrl correctly", () => {
+        let card = new Card({title: 'test', image_url: "pass", code: "0"});
+        expect(card.getImageUrl("fail")).toBe("pass", "It should prefer an image url set in the json data");
+
+        let cardNoImg = new Card({title: "NoImg", image_url: "", code: "1"});
+        expect(cardNoImg.getImageUrl("{code}_Pass")).toBe("1_Pass", "We should use the code + an image url  here");
+
+        comp.card = card;
+        fixture.detectChanges();
+        expect($('.card-img').length).toBe(0, "By default we should NOT be showing an image");
+
+        comp.showImage = true;
+        fixture.detectChanges();
+        expect($('.card-img').length).toBe(1, "Now we should be showing an image.");
+    });
+
 });
 

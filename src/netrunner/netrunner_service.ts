@@ -1,5 +1,5 @@
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import {Observable} from 'rxjs';
+
 
 import {Card, Cycle, Pack} from './types';
 
@@ -17,9 +17,10 @@ export class NetrunnerService {
 
     public getDistinctNamedCards() {
         let allCards: Array<Card> = this.determineCardLegality();
-        let legalCards = this.getRevisedCoreCards(allCards);
-        let bannedCards = this.getBannedCoreCards(allCards);
+        let legalCards = this.getLegalCards(allCards);
+        let bannedCards = this.getBannedCards(allCards);
 
+        // Ensure that the 'primary' card is legal if it can be played
         let distinctLookup = _.groupBy(legalCards, 'title');
         _.each(bannedCards, bc => {
             if (!distinctLookup[bc.title]) {
@@ -64,16 +65,17 @@ export class NetrunnerService {
                 console.error("What the fuck, no pack found for this card?", card);
             }
             card.fullText = card.buildFullText(); // One time cost, build out the search text
+            card.image_url = card.getImageUrl(_.get(this.getCards(), 'imageUrlTemplate'));
         });
         return cards;
     }
 
-    public getRevisedCoreCards(cards: Array<Card> = null) {
+    public getLegalCards(cards: Array<Card> = null) {
         cards = this.determineCardLegality(cards);
         return  _.filter(cards, {can_play: true});
     }
 
-    public getBannedCoreCards(cards: Array<Card> = null) {
+    public getBannedCards(cards: Array<Card> = null) {
         cards = this.determineCardLegality(cards);
         return  _.filter(cards, {can_play: false});
     }

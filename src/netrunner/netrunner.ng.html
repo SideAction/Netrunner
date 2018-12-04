@@ -28,7 +28,7 @@
     <h4>Matching Count: {{matchedCards?.length}}</h4>
     <div *ngIf="matchedCards && matchedCards?.length > 0">
       <div *ngFor="let card of matchedCards">
-        <card-cmp [card]="card"></card-cmp>
+        <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
       </div>
     </div>
   </div>

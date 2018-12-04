@@ -56,11 +56,14 @@ export class Card {
     public type_code: string; // "identity"
     public uniqueness: boolean; // wtf is this?
 
-    public text: string;
-    public fullText: string;
     // "Draft format only. If you have more [jinteki] cards rezzed than any other faction, when
     // your turn begins, you may swap 2 pieces of installed ice."
-    public pack: Pack;
+    public text: string;
+
+    // Full text is the combination of all the cycle, pack and card text entries and metadata
+    public fullText: string;
+    public image_url: string; // Often in the card json, or calculated using the code
+    public pack: Pack; 
 
     // Is this card legal?  You have to calculate that off the pack -> cycle lookup, and then cross
     // reference against CORE
@@ -82,6 +85,11 @@ export class Card {
             }
         }
         return text;
+    }
+
+    // Some cards have an image_url set, many older ones require the urlTemplate evaluation
+    public getImageUrl(url: string) {
+        return this.image_url || (_.isString(url) ? url.replace('{code}', this.code) : '');
     }
 
     public match(textString: string, re: RegExp, fullTextSearch = false) {

@@ -1,11 +1,11 @@
 import {OnInit, ViewChild, Component, EventEmitter, Input, Output, HostListener} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 import {NetrunnerService} from './netrunner_service';
 import {Cycle, Pack, Card} from './types';
 
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
     selector: 'netrunner-cmp',
@@ -25,10 +25,14 @@ export class NetrunnerCmp implements OnInit {
     public cycles: Array<Cycle>;
     public packs: Array<Pack>;
     public matchedCards: Array<Card>;
-    public matchedBans: Array<Card>;
 
     public searchFullText: boolean = false;
     public errMsg: string;
+
+    // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
+    @Input() imageDelayInSeconds: number = 5;
+    public showImages = false;
+    public lastSearchTime: moment.Moment;
 
     constructor(public _netrunnerService: NetrunnerService) {
 
@@ -39,7 +43,6 @@ export class NetrunnerCmp implements OnInit {
         if (!this.allCards) { // Useful if you want to test specific cases
             this.loadCards();
         }
-        // this.setupFilter();
     }
 
     public loadCards() {
@@ -47,16 +50,41 @@ export class NetrunnerCmp implements OnInit {
     }
 
     public searchCards(textToFind: string) {
-        this.matchedBans = null;
         this.matchedCards = null;
 
         console.log("Search text", textToFind);
+        if (!_.isString(textToFind) || textToFind.length === 0) {
+            return;
+        }
+        // Set the last search call, then setup a timeout to check when we should show images.
+        this.lastSearchTime = moment();
+        this.resetVisibleImages();
+
+        // Could just make this a debounce, not sure if _.debounce plays nice with digest loops yet
         setTimeout(() => {
-            if (!_.isString(textToFind) || textToFind.length === 0) {
-                return;
-            }
             this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
-        }, 10);
+        }, 100);
+    }
+
+    // Assume we would like to show the images, so just check a little after the visibility should be present
+    public resetVisibleImages() {
+        this.showImages = false;
+        setTimeout(() => {
+            this.showImages = this.showImagesAfterDelay(this.imageDelayInSeconds);
+        }, ((this.imageDelayInSeconds * 1000) + 200));
+    }
+
+    public showImagesAfterDelay(delayImageLoadInSeconds: number) {
+        console.log("Check image delay", this.imageDelayInSeconds);
+        if (this.lastSearchTime) {
+            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds()
+            if (seconds >= delayImageLoadInSeconds) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 
     public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {
