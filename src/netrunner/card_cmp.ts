@@ -1,7 +1,4 @@
 import {OnInit, ViewChild, Component, EventEmitter, Input, Output, HostListener} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
-
 import {NetrunnerService} from './netrunner_service';
 import {Cycle, Pack, Card} from './types';
 

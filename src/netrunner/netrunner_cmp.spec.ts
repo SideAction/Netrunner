@@ -54,7 +54,7 @@ fdescribe('TestingNetrunnerCmp', () => {
 
         comp.searchFullText = true;
         let fullTextNoise = comp.checkCards(comp.allCards, 'Noise', 20);
-        expect(fullTextNoise.length).toBe(11, "There appear to be about 11 of these");
+        expect(fullTextNoise.length).toBe(9, "There appear to be about 11 of these");
 
         let restrictResults = comp.checkCards(comp.allCards, 'Noise', 3);
         expect(restrictResults.length).toBe(3, "Ensure we are only rendering an amount asked for");

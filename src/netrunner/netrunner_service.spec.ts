@@ -44,11 +44,11 @@ fdescribe('TestingNetrunnerService', () => {
 
         let cycles: Array<Cycle> = service.getCycleInstances();
         expect(cycles).toBeDefined("Did you forget a return you monkey");
-        expect(cycles.length).toBe(17, "Should have 17 cycles... what the fuck, how?");
+        expect(cycles.length).toBe(20, "Should have 20 cycles now");
 
         let packs: Array<Pack> = service.getPackInstances();
         expect(packs).toBeDefined("Packs not loading, wget / check in the json api?");
-        expect(packs.length).toBe(57, "FML, just take all my money already");
+        expect(packs.length).toBe(60, "FML, just take all my money already");
     });
 
 
@@ -71,7 +71,7 @@ fdescribe('TestingNetrunnerService', () => {
             expect(card.pack).toBeDefined("We should have assigned a pack to each and every card.");
         });
 
-        let revisedCore: Array<Card> = service.getRevisedCoreCards();
+        let revisedCore: Array<Card> = service.getLegalCards();
         expect(revisedCore).toBeDefined("We should have a bunch of revised cards");
         expect(revisedCore.length < cards.length).toBe(true, "We should have many fewer revised core cards.");
         expect(revisedCore.length > 800).toBe(true, "There should be a lot of them.");
@@ -80,18 +80,24 @@ fdescribe('TestingNetrunnerService', () => {
     it("Should be able to determine specific known cards as a base test", () => {
         let bannedNoise: Card = new Card({pack_code: 'core', title: "Noise: Hacker Extraordinaire"});
         let bannedSanSan: Card = new Card({pack_code: 'ta', title: 'Vamp'});
-        let legalBeale: Card = new Card({pack_code: 'core2', title: 'Project Beale'});
+        let core2Beale: Card = new Card({pack_code: 'core2', title: 'Project Beale'});
+        let eliLegal: Card = new Card({pack_code: 'sc19', title: 'Eli 1.0'});
+        let corroder: Card = new Card({pack_code: 'sc19', title: 'Corroder'});
 
-        let nopes: Array<Card> = service.determineCardLegality([bannedNoise, bannedSanSan, legalBeale]);
-        expect(nopes.length).toBe(3, "We should get ALL cards back, just determine legal play");
+        let nopes: Array<Card> = service.determineCardLegality([
+            bannedNoise, bannedSanSan, core2Beale, eliLegal, corroder
+        ]);
+        expect(nopes.length).toBe(5, "We should get ALL cards back, just determine legal play");
         expect(bannedNoise.can_play).toBe(false, "No more Noise, This should not be legal");
         expect(bannedSanSan.can_play).toBe(false, "SanSan nope, This should not be legal");
-        expect(legalBeale.can_play).toBe(true, "This made it into core2");
+        expect(core2Beale.can_play).toBe(false, "This made it into core2");
+        expect(eliLegal.can_play).toBe(true, "Eli 1.0 is now legal");
+        expect(corroder.can_play).toBe(true, "Corroder is now legel");
 
 
         let allCards = service.determineCardLegality();
-        let bannedCards = service.getBannedCoreCards();
-        let legalCards = service.getRevisedCoreCards();
+        let bannedCards = service.getBannedCards();
+        let legalCards = service.getLegalCards();
 
         expect(allCards.length > bannedCards.length).toBe(true, "The total should be more than the bans.");
         expect(allCards.length > legalCards.length).toBe(true, "Same for the count of legal to all cards.");
@@ -101,8 +107,8 @@ fdescribe('TestingNetrunnerService', () => {
     it('Should be able to get a distinct list of all the cards merging the legal core2 vs core', () => {
         let mergedCards = service.getDistinctNamedCards();
         let allCards = service.determineCardLegality();
-        let bannedCards = service.getBannedCoreCards();
-        let legalCards = service.getRevisedCoreCards();
+        let bannedCards = service.getBannedCards();
+        let legalCards = service.getLegalCards();
 
         expect(mergedCards.length < allCards.length).toBe(true,
             "We should have a lot of cards, but definitely some are banned"
@@ -111,10 +117,16 @@ fdescribe('TestingNetrunnerService', () => {
         let groups = _.groupBy(mergedCards, 'can_play');
         let mergedLegal = groups[true];
         let mergedBanned = groups[false];
-        expect(mergedLegal.length).toBe(legalCards.length, "Should have all the legal cards in the merged list");
-        expect(mergedBanned.length > 0 && mergedBanned.length < bannedCards.length).toBe(true,
-            "Should have many bans, but not all"
-        );
+
+        
+        let count = 0;
+        let mergedLookup = _.groupBy(mergedLegal, 'title');
+        _.each(legalCards, function(card) {
+            let mergedCard = mergedLookup[card.title];
+            expect(!!mergedCard).toBe(true, "We should have all legal cards " + card.title)
+            count++;
+        });
+        expect(count).toBe(legalCards.length, "We should have checked all legal Cards.");
     });
 
 });
