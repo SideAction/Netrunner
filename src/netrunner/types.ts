@@ -1,19 +1,53 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-// Cycle is a number of packs, cycles are what goes out of legality
-export class Cycle {
-    public code: string; // lunar
-    public name: string; // Lunar
-    public position: number; // 6
-    public size: number; // Number of packs
-    public rotated: boolean; // Is it out of rotation
+
+export class BaseType {
 
     public raw: any;
     constructor(raw) {
         Object.assign(this, raw);
         this.raw = raw || {};
     }
+}
+
+// Things Code-Gate, Breaker, Agenda
+export class SubType extends BaseType {
+    public code: string;
+    public name: string;
+    public is_subtype: boolean; // Is this Barrier, a subtype of ICE
+    public side_code: string; // Runner or corp
+}
+
+export class Faction extends BaseType {
+    public code: string;
+    public name: string;
+    public color: string;
+    public is_mini: boolean = false; // The special mini factions like Adam
+    public side_code: string;
+}
+
+export class MWL extends BaseType {
+    public active: boolean = false;
+    public cards: any;
+
+    public date_start: moment.Moment;
+    public date_update: moment.Moment;
+
+    // Card sub objects global_penalty: 1
+    // Card sub objects universal_faction_cost: 1
+    // is_restricted 1
+    // deck_limit: 1
+}
+
+
+// Cycle is a number of packs, cycles are what goes out of legality
+export class Cycle extends BaseType {
+    public code: string; // lunar
+    public name: string; // Lunar
+    public position: number; // 6
+    public size: number; // Number of packs
+    public rotated: boolean; // Is it out of rotation
 }
 
 
@@ -63,7 +97,7 @@ export class Card {
     // Full text is the combination of all the cycle, pack and card text entries and metadata
     public fullText: string;
     public image_url: string; // Often in the card json, or calculated using the code
-    public pack: Pack; 
+    public pack: Pack;
 
     // Is this card legal?  You have to calculate that off the pack -> cycle lookup, and then cross
     // reference against CORE

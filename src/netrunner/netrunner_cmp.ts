@@ -2,7 +2,7 @@ import {OnInit, ViewChild, Component, EventEmitter, Input, Output, HostListener}
 import {Subscription} from 'rxjs';
 
 import {NetrunnerService} from './netrunner_service';
-import {Cycle, Pack, Card} from './types';
+import {Faction, SubType, Cycle, Pack, Card} from './types';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -26,6 +26,15 @@ export class NetrunnerCmp implements OnInit {
     public packs: Array<Pack>;
     public matchedCards: Array<Card>;
 
+    // Make it so we can quick apply some filters
+    public types: Array<any>;
+    public corpTypes: Array<any>;
+    public runnerTypes: Array<any>;
+
+    public factions: Array<any>;
+    public corpFactions: Array<any>;
+    public runnerFactions: Array<any>;
+
     public searchFullText: boolean = false;
     public errMsg: string;
 
@@ -34,14 +43,25 @@ export class NetrunnerCmp implements OnInit {
     public showImages = false;
     public lastSearchTime: moment.Moment;
 
+    public listCards: Array<Card>;
+
+    // Filters
+    public packSelection = null; // Allow for granular selection of packs
+    public factionSelection = null; // selection on a faction basis
+    public typeSelection = null; // Card type (code gate etc)
+    public cycleSelection = null;  // Cycle filtering (further impacted by pack)
+
     constructor(public _netrunnerService: NetrunnerService) {
 
     }
 
     public ngOnInit() {
-        console.log("Loading up the netrunner component.", this.cardSearch);
+        // console.log("Loading up the netrunner component.", this.cardSearch);
         if (!this.allCards) { // Useful if you want to test specific cases
             this.loadCards();
+        }
+        if (!this.factions) {
+            this.typeFilters();
         }
     }
 
@@ -77,7 +97,7 @@ export class NetrunnerCmp implements OnInit {
     public showImagesAfterDelay(delayImageLoadInSeconds: number) {
         console.log("Check image delay", this.imageDelayInSeconds);
         if (this.lastSearchTime) {
-            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds()
+            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds();
             if (seconds >= delayImageLoadInSeconds) {
                 return true;
             } else {
@@ -88,18 +108,12 @@ export class NetrunnerCmp implements OnInit {
     }
 
     public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {
-        console.log("Searching for cards with: ", textToFind);
-        this.errMsg = null;
-        let re = null;
-        try {
-            re = new RegExp(textToFind, 'igm');
-        } catch (err) {
-            this.errMsg = 'Invalid Regex';
-            console.error("Invalid regex detected in textToFind");
-        }
-        let matchingCards  = _.filter(cards, card => {
-            return card.match(textToFind, re, this.searchFullText);
-        });
+        let rotationState = null; // TODO
+        let matchingCards = cards;
+        matchingCards = this.rotationFilters(matchingCards, rotationState);
+        matchingCards = this.selectionFilters(matchingCards);
+        matchingCards = this.textFilters(matchingCards, textToFind, this.searchFullText);
+
         return matchingCards && matchingCards.length > limit ? matchingCards.slice(0, limit) : matchingCards;
     }
 
@@ -112,5 +126,125 @@ export class NetrunnerCmp implements OnInit {
                     error => { console.error("Failed to setup the card filter correctly", error); }
                 );
         }
+    }
+
+    // Just grab a bunch of hashes with selection states
+    public buildSelectionLookups(packs: Array<Pack>, factions: Array<Faction>, types: Array<SubType>, cycles: Array<Cycle>) {
+        this.packSelection = this.getStateLookup(packs);
+        this.factionSelection = this.getStateLookup(factions);
+        this.typeSelection = this.getStateLookup(types);
+        this.cycleSelection = this.getStateLookup(cycles);
+    }
+
+    public getStateLookup(iter: Array<any>, key: string = 'code') {
+        let lookup = {};
+        _.each(iter, item => {
+            lookup[item[key]] = true;
+        });
+        return lookup;
+    }
+
+    // Perhaps make a lookup for the various card filters that can be applied
+    public toggleType(typ: SubType, state: boolean = null) {
+        console.log("Toggling type", typ, state);
+        let code = typ.code;
+        this.typeSelection[code] = state !== null ? state : !this.typeSelection[code];
+    }
+
+    public togglePack(pack: Pack, state: boolean = null) {
+        console.log("Toggling pack", pack, state);
+        let code = pack.code;
+        this.packSelection[code] == state !== null ? state : !this.packSelection[code];
+    }
+
+    public toggleFaction(faction: Faction, state: boolean = null) {
+        console.log("Toggling faction", faction, state);
+        let code = faction.code;
+        this.factionSelection[code] = state !== null ? state : this.factionSelection[code];
+    }
+
+    public toggleCycle(cycle: Cycle, state: boolean = null) {
+        console.log("Toggling cycle", cycle, state);
+        let code = cycle.code;
+        this.cycleSelection[code] = state !== null ? state : this.cycleSelection[code];
+    }
+
+    private lookupFilter(cards: Array<Card>, selectionLookup: any, filterKey: string) {
+        selectionLookup = selectionLookup || {};
+        return _.filter(cards, card => { 
+            let checkVal = card[filterKey]; // Things like type_code, pack_code, faction_code etc
+            return selectionLookup[checkVal];
+        })
+    }
+
+    // We have legality which should filter the overall card set
+    public selectionFilters(cards: Array<Card> = null) {
+        let filterCards: Array<Card> = cards || this.allCards; 
+        filterCards = this.lookupFilter(filterCards, this.typeSelection, 'type_code');
+        filterCards = this.lookupFilter(filterCards, this.packSelection, 'pack_code');
+        filterCards = this.lookupFilter(filterCards, this.factionSelection, 'faction_code');
+        filterCards = this.cycleFilter(filterCards, this.cycleSelection);
+
+        // SideLookup
+        return filterCards;
+    }
+
+    public cycleFilter(cards: Array<Card>, selectionLookup: any) {
+        return _.filter(cards, card => {
+            if (!card.pack) {
+                console.log("What the fuck, no pack?", card);
+            } else {
+                return selectionLookup[card.pack.cycle.code]; 
+            }
+        });
+    }
+
+    // Filter based on rotation state selection (In: true, Out: false, All: null)
+    public rotationFilters(cards: Array<Card>, rotationState: boolean = null) {
+        if (rotationState === null) {
+            return cards;
+        }
+
+        return _.filter(cards, card => {
+            return card.pack.cycle.rotated === rotationState;
+        });
+    }
+
+    public textFilters(cards: Array<Card>, textToFind: string, searchFullText: boolean = false) {
+        console.log("Searching for cards with: ", textToFind);
+        this.errMsg = null;
+
+        let re = null;
+        try {
+            re = new RegExp(textToFind, 'igm');
+        } catch (err) {
+            this.errMsg = 'Invalid Regex';
+            console.error("Invalid regex detected in textToFind");
+        }
+        return  _.filter(cards, card => {
+            return card.match(textToFind, re, searchFullText);
+        });
+    }
+
+    public getCardNames() {
+        let cards: Array<Card> = this._netrunnerService.determineCardLegality();
+        this.listCards = this.selectionFilters(cards);
+    }
+
+    public typeFilters() {
+        this.factions = this._netrunnerService.getFactionInstances();
+        this.types = this._netrunnerService.getSubTypeInstances();
+        this.packs = this._netrunnerService.getPackInstances();
+        this.cycles = this._netrunnerService.getCycleInstances();
+
+        this.corpFactions = _.filter(this.factions, f => f.side_code === 'corp');
+        this.runnerFactions = _.filter(this.factions, f => f.side_code === 'runner');
+        this.corpTypes = _.filter(this.types, t => t.side_code === 'corp');
+        this.runnerTypes = _.filter(this.types, t => t.side_code === 'runner');
+
+        // Used to setup various filters that can be applied in the UI
+        this.buildSelectionLookups(this.packs, this.factions, this.types, this.cycles);
+        // console.log("Hmmmm", this.typeSelection, this.packSelection, this.factionSelection, this.cycleSelection);
+        this.getCardNames();
     }
 }

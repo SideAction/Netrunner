@@ -118,16 +118,13 @@ fdescribe('TestingNetrunnerService', () => {
         let mergedLegal = groups[true];
         let mergedBanned = groups[false];
 
-        
         let count = 0;
         let mergedLookup = _.groupBy(mergedLegal, 'title');
         _.each(legalCards, function(card) {
             let mergedCard = mergedLookup[card.title];
-            expect(!!mergedCard).toBe(true, "We should have all legal cards " + card.title)
+            expect(!!mergedCard).toBe(true, "We should have all legal cards " + card.title);
             count++;
         });
         expect(count).toBe(legalCards.length, "We should have checked all legal Cards.");
     });
-
 });
-

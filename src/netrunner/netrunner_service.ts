@@ -1,7 +1,5 @@
 import {Observable} from 'rxjs';
-
-
-import {Card, Cycle, Pack} from './types';
+import {Faction, SubType, MWL, Card, Cycle, Pack} from './types';
 
 import * as _ from 'lodash';
 
@@ -81,6 +79,7 @@ export class NetrunnerService {
     }
 
 
+    // Note these are not assembled, typically when dealing with cards you want the .determineCardLegality() return
     public getCardInstances() {
         return _.map(_.get(this.getCards(), 'data'), card => new Card(card));
     }
@@ -105,4 +104,27 @@ export class NetrunnerService {
         return require('./packs.json');
 
     }
+
+    public getFactions() {
+        return require('./factions.json');
+    }
+    public getFactionInstances() {
+        return _.map(_.get(this.getFactions(), 'data'), faction => new Faction(faction));
+    }
+
+    public getSubTypes() {
+        return require('./types.json');
+    }
+    public getSubTypeInstances() {
+        return _.map(_.get(this.getSubTypes(), 'data'), typ => new SubType(typ));
+    }
+
+    public getMWL() {
+        return require('./mwl.json');
+    }
+
+    public getMWLInstances() {
+        return _.map(_.get(this.getMWL(), 'data'), mwl => new MWL(mwl));
+    }
+
 }

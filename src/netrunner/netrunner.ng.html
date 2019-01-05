@@ -22,6 +22,45 @@
   </form>
 
   <div>
+    CORP | Factions | Types
+    <div class="corp-factions">
+      <button type="button" class="btn btn-xs btn-corp-faction">
+        All
+      </button>
+      <button type="button" class="btn btn-xs btn-corp-faction" 
+        [class.btn-primary]="faction.selected"
+        *ngFor="let faction of corpFactions"
+        (click)="toggleFaction(faction)"
+      >{{ faction.name }}</button>
+    </div>
+    <div class="corp-types">
+      <button  type="btn btn-xs btn-corp-type"
+        [class.btn-primary]="type.selected"
+        *ngFor="let type of corpTypes"
+        (click)="toggleType(type)"
+      >{{ type.name }}</button>
+    </div>
+  </div>
+
+  <div>
+    Runner 
+    <div class="runner-factions"> 
+      <button type="button" class="btn btn-xs btn-runner-type"
+        [class.btn-primary]="faction.selected"
+        (click)="toggleFaction(faction)"
+        *ngFor="let faction of runnerFactions"
+      >{{ faction.name }}</button>
+    </div>
+    <div class="runner-types">
+      <button type="button" class="btn btn-xs btn-runner-types"
+        [class.btn-primary]="type.selected"
+        *ngFor="let type of runnerTypes"
+        (click)="toggleType(type)"
+      >{{ type.name }}</button>
+    </div>
+  </div>
+
+  <div>
     Total Cards: {{allCards?.length}}
   </div>
   <div>
@@ -32,4 +71,11 @@
       </div>
     </div>
   </div>
+
+  List Cards
+  <div *ngFor="let c of listCards">
+    {{c.title}}
+  </div>
+
+
 </div>
