@@ -4,7 +4,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {DebugElement} from '@angular/core';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import {NetrunnerCmp} from './netrunner_cmp';
+import {NetrunnerCmp, ROTATION} from './netrunner_cmp';
 import {NetrunnerService} from './netrunner_service';
 import {NetrunnerModule} from './netrunner_module';
 import {Card, Cycle, Faction, Pack} from './types';
@@ -41,7 +41,7 @@ fdescribe('TestingNetrunnerCmp', () => {
         expect(el).toBeDefined("We should have a top level element");
     });
 
-    fit("We should be able to search for cards by text", () => {
+    it("We should be able to search for cards by text", () => {
         comp.allCards = []; // Render nothing, do not load actual image data.
 
         let none = comp.checkCards(comp.allCards, 'narp', 2);
@@ -147,12 +147,11 @@ fdescribe('TestingNetrunnerCmp', () => {
 
     it("Can use the rotation filter to figure out what is actually legal", () => {
         let cards: Array<Card> = service.determineCardLegality(); 
-
-        let checkCards: Array<Card> = comp.rotationFilters(cards);
+        let checkCards: Array<Card> = comp.rotationFilters(cards, ROTATION.ALL);
         expect(checkCards.length).toBe(cards.length, "Null is the default, it is all cards.");
 
         // Test out cards that have rotated out (note a card can still be playable)
-        let rotatedOut: Array<Card> = comp.rotationFilters(cards, true);
+        let rotatedOut: Array<Card> = comp.rotationFilters(cards, ROTATION.OUT);
         expect(rotatedOut.length < cards.length).toBe(true, "It should rotate a bunch out.");
         let parasite = _.find(rotatedOut, {title: 'Parasite'});
         expect(parasite).not.toBe(undefined, "We should have parasite as a rotated card.");
@@ -163,7 +162,7 @@ fdescribe('TestingNetrunnerCmp', () => {
         expect(eli.pack.cycle.code).toBe('genesis', 'Str 4 ftw');
 
         // Test out currently legal cards
-        let notRotated: Array<Card> = comp.rotationFilters(cards, false);
+        let notRotated: Array<Card> = comp.rotationFilters(cards, ROTATION.IN);
         expect(notRotated.length < cards.length).toBe(true, "We should have legal cards.");
         expect(notRotated.length > rotatedOut.length).toBe(true, "There are more legal then rotated");
         expect(_.find(notRotated, {title: 'Noise: Hacker Extraordinaire'})).toBe(
