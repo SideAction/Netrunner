@@ -2,10 +2,16 @@ import {OnInit, ViewChild, Component, EventEmitter, Input, Output, HostListener}
 import {Subscription} from 'rxjs';
 
 import {NetrunnerService} from './netrunner_service';
-import {Cycle, Pack, Card} from './types';
+import {Faction, SubType, Cycle, Pack, Card} from './types';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
+
+export let ROTATION = {
+    ALL: "Any Rotation",
+    IN: "In Rotation",
+    OUT: "Out of Rotation",
+};
 
 @Component({
     selector: 'netrunner-cmp',
@@ -26,7 +32,20 @@ export class NetrunnerCmp implements OnInit {
     public packs: Array<Pack>;
     public matchedCards: Array<Card>;
 
+    public packListing: any; // Hash of packs grouped by cycle_code
+
+    // Make it so we can quick apply some filters
+    public types: Array<any>;
+    public corpTypes: Array<any>;
+    public runnerTypes: Array<any>;
+
+    public factions: Array<any>;
+    public corpFactions: Array<any>;
+    public runnerFactions: Array<any>;
+
     public searchFullText: boolean = false;
+    public rotationState: number = 0;
+    public rotationStates = [ROTATION.ALL, ROTATION.IN, ROTATION.OUT];
     public errMsg: string;
 
     // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
@@ -34,14 +53,25 @@ export class NetrunnerCmp implements OnInit {
     public showImages = false;
     public lastSearchTime: moment.Moment;
 
+    public listCards: Array<Card>;
+
+    // Filters
+    public packSelection = null; // Allow for granular selection of packs
+    public factionSelection = null; // selection on a faction basis
+    public typeSelection = null; // Card type (code gate etc)
+    public cycleSelection = null;  // Cycle filtering (further impacted by pack)
+
     constructor(public _netrunnerService: NetrunnerService) {
 
     }
 
     public ngOnInit() {
-        console.log("Loading up the netrunner component.", this.cardSearch);
+        // console.log("Loading up the netrunner component.", this.cardSearch);
         if (!this.allCards) { // Useful if you want to test specific cases
             this.loadCards();
+        }
+        if (!this.factions) {
+            this.typeFilters();
         }
     }
 
@@ -49,7 +79,7 @@ export class NetrunnerCmp implements OnInit {
         this.allCards = this._netrunnerService.getDistinctNamedCards();
     }
 
-    public searchCards(textToFind: string) {
+    public searchCards(textToFind: string = this.searchText) {
         this.matchedCards = null;
 
         console.log("Search text", textToFind);
@@ -60,7 +90,7 @@ export class NetrunnerCmp implements OnInit {
         this.lastSearchTime = moment();
         this.resetVisibleImages();
 
-        // Could just make this a debounce, not sure if _.debounce plays nice with digest loops yet
+        // TODO:  Definitely do a debounce but it still might be jacked by angular timeout loop issues
         setTimeout(() => {
             this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
         }, 100);
@@ -77,7 +107,7 @@ export class NetrunnerCmp implements OnInit {
     public showImagesAfterDelay(delayImageLoadInSeconds: number) {
         console.log("Check image delay", this.imageDelayInSeconds);
         if (this.lastSearchTime) {
-            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds()
+            let seconds = moment.duration(moment().diff(this.lastSearchTime)).seconds();
             if (seconds >= delayImageLoadInSeconds) {
                 return true;
             } else {
@@ -87,19 +117,13 @@ export class NetrunnerCmp implements OnInit {
         return false;
     }
 
-    public checkCards(cards: Array<Card>, textToFind: string, limit: number = 20) {
-        console.log("Searching for cards with: ", textToFind);
-        this.errMsg = null;
-        let re = null;
-        try {
-            re = new RegExp(textToFind, 'igm');
-        } catch (err) {
-            this.errMsg = 'Invalid Regex';
-            console.error("Invalid regex detected in textToFind");
-        }
-        let matchingCards  = _.filter(cards, card => {
-            return card.match(textToFind, re, this.searchFullText);
-        });
+    public checkCards(cards: Array<Card> = this.allCards, textToFind: string = this.searchText, limit: number = 20) {
+        let matchingCards = cards;
+        matchingCards = this.rotationFilters(matchingCards, this.rotationStates[this.rotationState]);
+        matchingCards = this.selectionFilters(matchingCards);
+        matchingCards = this.textFilters(matchingCards, textToFind, this.searchFullText);
+
+        console.log("WAT", matchingCards.length);
         return matchingCards && matchingCards.length > limit ? matchingCards.slice(0, limit) : matchingCards;
     }
 
@@ -112,5 +136,165 @@ export class NetrunnerCmp implements OnInit {
                     error => { console.error("Failed to setup the card filter correctly", error); }
                 );
         }
+    }
+
+    // Just grab a bunch of hashes with selection states
+    public buildSelectionLookups(packs: Array<Pack>, factions: Array<Faction>, types: Array<SubType>, cycles: Array<Cycle>) {
+        this.packSelection = this.getStateLookup(packs);
+        this.factionSelection = this.getStateLookup(factions);
+        this.typeSelection = this.getStateLookup(types);
+        this.cycleSelection = this.getStateLookup(cycles);
+    }
+
+    public getStateLookup(iter: Array<any>, key: string = 'code') {
+        let lookup = {};
+        _.each(iter, item => {
+            lookup[item[key]] = true; 
+        });
+        return lookup;
+    }
+
+    // TODO: All selection for each major section
+    
+    // TODO: All selection for each cycle operation (Remove cycle filter but use check all related cycles?)
+
+    public rotationStateChange(state: number = 0) {
+        this.rotationState = (this.rotationState + 1) % this.rotationStates.length;
+        this.matchedCards = this.checkCards();
+    }
+
+    // Perhaps make a lookup for the various card filters that can be applied
+    public toggleType(typ: SubType, state: boolean = null) {
+        console.log("Toggling type", typ, state);
+        let code = typ.code;
+        this.typeSelection[code] = state !== null ? state : !this.typeSelection[code];
+        this.matchedCards = this.checkCards();
+    }
+
+    public togglePack(pack: Pack, state: boolean = null) {
+        console.log("Toggling pack", pack, state);
+        let code = pack.code;
+        this.packSelection[code] == state !== null ? state : !this.packSelection[code];
+        this.matchedCards = this.checkCards();
+    }
+
+    public toggleFaction(faction: Faction, state: boolean = null) {
+        console.log("Toggling faction", faction, state);
+        let code = faction.code;
+        this.factionSelection[code] = state !== null ? state : !this.factionSelection[code];
+        this.matchedCards = this.checkCards();
+    }
+
+
+    // TODO: could make it so the rotation state alters the selections and just do one filter
+    public toggleCycle(cycle: Cycle, state: boolean = null) {
+        console.log("Toggling cycle", cycle, state);
+        let code = cycle.code;
+        let newState = state !== null ? state : !this.cycleSelection[code];
+        this.cycleSelection[code] = newState;
+
+        // Now set the pack state based on the cycle (filter would be the same but UI purposes)
+        let packLookup = _.groupBy(this.packs, 'cycle_code') || {};
+        let packs = packLookup[cycle.code] || [];
+        _.each(packs, pack => {
+            this.packSelection[pack.code] = newState;
+        });
+        this.matchedCards = this.checkCards();
+
+    }
+
+
+    private lookupFilter(cards: Array<Card>, selectionLookup: any, filterKey: string) {
+        selectionLookup = selectionLookup || {};
+        return _.filter(cards, card => { 
+            let checkVal = card[filterKey]; // Things like type_code, pack_code, faction_code etc
+            return selectionLookup[checkVal];
+        });
+    }
+
+    // helper for setting things to all or none
+    private setAllFilterStates(filterLookup: any, state: boolean = false) {
+        filterLookup = filterLookup || {};
+        _.each(filterLookup, (val, key) => {
+            filterLookup[key] = state;
+        });
+    }
+
+
+    // We have legality which should filter the overall card set
+    public selectionFilters(cards: Array<Card> = null) {
+        let filterCards: Array<Card> = cards || this.allCards; 
+        filterCards = this.lookupFilter(filterCards, this.typeSelection, 'type_code');
+        filterCards = this.lookupFilter(filterCards, this.packSelection, 'pack_code');
+        filterCards = this.lookupFilter(filterCards, this.factionSelection, 'faction_code');
+        filterCards = this.cycleFilter(filterCards, this.cycleSelection);
+
+        // SideLookup
+        return filterCards;
+    }
+
+    public cycleFilter(cards: Array<Card>, selectionLookup: any) {
+        return _.filter(cards, card => {
+            if (!card.pack) {
+                console.log("What the fuck, no pack?", card);
+            } else {
+                return selectionLookup[card.pack.cycle.code]; 
+            }
+        });
+    }
+
+    // Filter based on rotation state selection (In: true, Out: false, All: null)
+    public rotationFilters(cards: Array<Card>, rotationState: string = ROTATION.ALL) {
+        // ALL, IN, OUT are the rotation options.
+        if (rotationState == ROTATION.ALL || rotationState == null) {
+            return cards;
+        }
+        let rotated = rotationState == ROTATION.OUT;
+        return _.filter(cards, card => {
+            return card.pack.cycle.rotated === rotated;
+        });
+    }
+
+    public textFilters(cards: Array<Card>, textToFind: string, searchFullText: boolean = false) {
+        if (textToFind === undefined || textToFind == null || textToFind === '') {
+            return cards;
+        } 
+        console.log("Searching for cards with: ", textToFind);
+        this.errMsg = null;
+
+        let re = null;
+        try {
+            re = new RegExp(textToFind, 'igm');
+        } catch (err) {
+            this.errMsg = 'Invalid Regex';
+            console.error("Invalid regex detected in textToFind");
+        }
+        return  _.filter(cards, card => {
+            return card.match(textToFind, re, searchFullText);
+        });
+    }
+
+    public getCardNames() {
+        let cards: Array<Card> = this._netrunnerService.determineCardLegality();
+        this.listCards = this.selectionFilters(cards);
+    }
+
+    public typeFilters() {
+        this.factions = this._netrunnerService.getFactionInstances();
+        this.types = this._netrunnerService.getSubTypeInstances();
+        this.packs = this._netrunnerService.getPackInstances();
+        this.cycles = this._netrunnerService.getCycleInstances();
+
+        this.corpFactions = _.filter(this.factions, f => f.side_code === 'corp');
+        this.runnerFactions = _.filter(this.factions, f => f.side_code === 'runner');
+        this.corpTypes = _.filter(this.types, t => t.side_code === 'corp');
+        this.runnerTypes = _.filter(this.types, t => t.side_code === 'runner');
+
+        this.packListing = _.groupBy(this.packs, 'cycle_code') || {};
+
+        // Used to setup various filters that can be applied in the UI
+        this.buildSelectionLookups(this.packs, this.factions, this.types, this.cycles);
+        // console.log("Hmmmm", this.typeSelection, this.packSelection, this.factionSelection, this.cycleSelection);
+        this.getCardNames();
     }
 }

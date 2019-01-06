@@ -19,7 +19,57 @@
       <input name="searchFullText" type="radio" [value]="true"  [(ngModel)]="searchFullText">
       Full Text
     </label>
+    <label>
+      <button type="button" (click)="rotationStateChange()">
+        {{rotationStates[rotationState]}}
+      </button>
+    </label>
   </form>
+
+
+  <div>
+    CORP | Factions | Types
+    <div class="corp-factions">
+      <span *ngFor="let faction of corpFactions">
+        <input type="checkbox" class="btn btn-xs btn-corp-faction" 
+          [checked]="factionSelection[faction.code]"
+          [class.btn-primary]="faction.selected"
+          (click)="toggleFaction(faction)"
+        />{{ faction.name }}
+      </span>
+    </div>
+    <div class="corp-types">
+      <span *ngFor="let type of corpTypes">
+        <input type="checkbox" class="btn btn-xs btn-corp-type"
+          [checked]="typeSelection[type.code]"
+          [class.btn-primary]="type.selected"
+          (click)="toggleType(type)"
+        />{{ type.name }}
+      </span>
+    </div>
+  </div>
+
+  <div>
+    Runner 
+    <div class="runner-factions"> 
+      <span *ngFor="let faction of runnerFactions">
+        <input type="checkbox" class="btn btn-xs btn-runner-type"
+          [checked]="factionSelection[faction.code]"
+          [class.btn-primary]="faction.selected"
+          (click)="toggleFaction(faction)"
+        />{{ faction.name }}
+      </span>
+    </div>
+    <div class="runner-types">
+      <span *ngFor="let type of runnerTypes">
+        <input type="checkbox" class="btn btn-xs btn-runner-types"
+          [checked]="typeSelection[type.code]"
+          [class.btn-primary]="type.selected"
+          (click)="toggleType(type)"
+        />{{ type.name }}
+      </span>
+    </div>
+  </div>
 
   <div>
     Total Cards: {{allCards?.length}}
@@ -31,5 +81,25 @@
         <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
       </div>
     </div>
+  </div>
+
+  <div class="nr-search-filter">
+    <div class="cycle-selection">
+      Cycle Selection
+      <div *ngIf="cycles">
+        <ul *ngFor="let cycle of cycles">
+          <input type="checkbox" [checked]="cycleSelection[cycle.code]" 
+            (change)="toggleCycle(cycle)"/>
+            {{cycle.name}} : ({{cycle.size}}) Rotated: {{cycle.rotated}}
+            <li *ngFor="let pack of (packListing[cycle.code] || [])">
+              <input type="checkbox" [checked]="packSelection[pack.code]"
+                (change)="togglePack(pack)"
+              />
+              {{pack.name}} - {{pack.date_release}} : ({{pack.size}}) 
+            </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </div>
