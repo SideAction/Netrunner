@@ -149,13 +149,12 @@ export class NetrunnerCmp implements OnInit {
     public getStateLookup(iter: Array<any>, key: string = 'code') {
         let lookup = {};
         _.each(iter, item => {
-            lookup[item[key]] = true; 
+            lookup[item[key]] = true;
         });
         return lookup;
     }
 
     // TODO: All selection for each major section
-    
     // TODO: All selection for each cycle operation (Remove cycle filter but use check all related cycles?)
 
     public rotationStateChange(state: number = 0) {
@@ -174,7 +173,7 @@ export class NetrunnerCmp implements OnInit {
     public togglePack(pack: Pack, state: boolean = null) {
         console.log("Toggling pack", pack, state);
         let code = pack.code;
-        this.packSelection[code] == state !== null ? state : !this.packSelection[code];
+        this.packSelection[code] = state !== null ? state : !this.packSelection[code];
         this.matchedCards = this.checkCards();
     }
 
@@ -206,7 +205,7 @@ export class NetrunnerCmp implements OnInit {
 
     private lookupFilter(cards: Array<Card>, selectionLookup: any, filterKey: string) {
         selectionLookup = selectionLookup || {};
-        return _.filter(cards, card => { 
+        return _.filter(cards, card => {
             let checkVal = card[filterKey]; // Things like type_code, pack_code, faction_code etc
             return selectionLookup[checkVal];
         });
@@ -223,7 +222,7 @@ export class NetrunnerCmp implements OnInit {
 
     // We have legality which should filter the overall card set
     public selectionFilters(cards: Array<Card> = null) {
-        let filterCards: Array<Card> = cards || this.allCards; 
+        let filterCards: Array<Card> = cards || this.allCards;
         filterCards = this.lookupFilter(filterCards, this.typeSelection, 'type_code');
         filterCards = this.lookupFilter(filterCards, this.packSelection, 'pack_code');
         filterCards = this.lookupFilter(filterCards, this.factionSelection, 'faction_code');
@@ -238,7 +237,7 @@ export class NetrunnerCmp implements OnInit {
             if (!card.pack) {
                 console.log("What the fuck, no pack?", card);
             } else {
-                return selectionLookup[card.pack.cycle.code]; 
+                return selectionLookup[card.pack.cycle.code];
             }
         });
     }
@@ -246,10 +245,10 @@ export class NetrunnerCmp implements OnInit {
     // Filter based on rotation state selection (In: true, Out: false, All: null)
     public rotationFilters(cards: Array<Card>, rotationState: string = ROTATION.ALL) {
         // ALL, IN, OUT are the rotation options.
-        if (rotationState == ROTATION.ALL || rotationState == null) {
+        if (rotationState === ROTATION.ALL || rotationState === null) {
             return cards;
         }
-        let rotated = rotationState == ROTATION.OUT;
+        let rotated = (rotationState === ROTATION.OUT);
         return _.filter(cards, card => {
             return card.pack.cycle.rotated === rotated;
         });
@@ -258,7 +257,7 @@ export class NetrunnerCmp implements OnInit {
     public textFilters(cards: Array<Card>, textToFind: string, searchFullText: boolean = false) {
         if (textToFind === undefined || textToFind == null || textToFind === '') {
             return cards;
-        } 
+        }
         console.log("Searching for cards with: ", textToFind);
         this.errMsg = null;
 
