@@ -84,7 +84,7 @@ fdescribe('TestingNetrunnerCmp', () => {
     });
 
     it("Should only show images after a certain delay time.", () => {
-        expect(comp.showImagesAfterDelay(5)).toBe(false, 
+        expect(comp.showImagesAfterDelay(5)).toBe(false,
             "No searches made, it has no lastSearchTime"
         );
         comp.lastSearchTime = moment().subtract('seconds', 2);
@@ -117,7 +117,7 @@ fdescribe('TestingNetrunnerCmp', () => {
         _.each(validate, selectionLookup => {
             _.each(selectionLookup, (val, key) => {
                 expect(val).toBe(true, "All the selection filters should be on.");
-                expect(typeof key).toBe('string', "All the codes should be strings"); 
+                expect(typeof key).toBe('string', "All the codes should be strings");
             });
         });
     });
@@ -125,7 +125,7 @@ fdescribe('TestingNetrunnerCmp', () => {
     it("selecting only a single pack should filter down to that pack", () => {
         // Note all other filters must still pass
         let packs: Array<Pack> = service.getPackInstances();
-        let cards: Array<Card> = service.determineCardLegality(); 
+        let cards: Array<Card> = service.determineCardLegality();
         comp.allCards = cards;
         fixture.detectChanges(); // Ensure the other filters are initialized
 
@@ -146,7 +146,7 @@ fdescribe('TestingNetrunnerCmp', () => {
     });
 
     it("Can use the rotation filter to figure out what is actually legal", () => {
-        let cards: Array<Card> = service.determineCardLegality(); 
+        let cards: Array<Card> = service.determineCardLegality();
         let checkCards: Array<Card> = comp.rotationFilters(cards, ROTATION.ALL);
         expect(checkCards.length).toBe(cards.length, "Null is the default, it is all cards.");
 
@@ -181,7 +181,7 @@ fdescribe('TestingNetrunnerCmp', () => {
         comp.allCards = cards;
         fixture.detectChanges(); // Sets up all the filters
 
-        let cycleCards: Array<Card> = comp.cycleFilter(cards, comp.cycleSelection); 
+        let cycleCards: Array<Card> = comp.cycleFilter(cards, comp.cycleSelection);
         expect(cycleCards.length).toBe(cards.length, "All cycles are checked, they should come back.");
 
         let genesis = _.find(cycles, {name: 'Genesis'});
