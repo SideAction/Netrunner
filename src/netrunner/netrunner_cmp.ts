@@ -165,22 +165,16 @@ export class NetrunnerCmp implements OnInit {
     // Perhaps make a lookup for the various card filters that can be applied
     public toggleType(typ: SubType, state: boolean = null) {
         console.log("Toggling type", typ, state);
-        let code = typ.code;
-        this.typeSelection[code] = state !== null ? state : !this.typeSelection[code];
         this.matchedCards = this.checkCards();
     }
 
     public togglePack(pack: Pack, state: boolean = null) {
         console.log("Toggling pack", pack, state);
-        let code = pack.code;
-        this.packSelection[code] = state !== null ? state : !this.packSelection[code];
         this.matchedCards = this.checkCards();
     }
 
     public toggleFaction(faction: Faction, state: boolean = null) {
         console.log("Toggling faction", faction, state);
-        let code = faction.code;
-        this.factionSelection[code] = state !== null ? state : !this.factionSelection[code];
         this.matchedCards = this.checkCards();
     }
 

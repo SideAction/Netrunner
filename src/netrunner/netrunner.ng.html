@@ -31,20 +31,18 @@
     CORP | Factions | Types
     <div class="corp-factions">
       <span *ngFor="let faction of corpFactions">
-        <input type="checkbox" class="btn btn-xs btn-corp-faction" 
-          [checked]="factionSelection[faction.code]"
-          [class.btn-primary]="faction.selected"
+        <mat-checkbox class="corp-faction-checkbox" 
+          [(ngModel)]="factionSelection[faction.code]"
           (click)="toggleFaction(faction)"
-        />{{ faction.name }}
+        >{{ faction.name }}</mat-checkbox> 
       </span>
     </div>
     <div class="corp-types">
       <span *ngFor="let type of corpTypes">
-        <input type="checkbox" class="btn btn-xs btn-corp-type"
-          [checked]="typeSelection[type.code]"
-          [class.btn-primary]="type.selected"
+        <mat-checkbox class="corp-faction-checkbox" 
+          [(ngModel)]="typeSelection[type.code]"
           (click)="toggleType(type)"
-        />{{ type.name }}
+        >{{ type.name }}</mat-checkbox>
       </span>
     </div>
   </div>
