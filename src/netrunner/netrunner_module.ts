@@ -9,6 +9,7 @@ import {NetrunnerService} from './netrunner_service';
 
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {MatCardModule} from '@angular/material';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {MatCardModule} from '@angular/material';
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionModule
   ],
   declarations: [NetrunnerCmp, CardCmp],
   exports: [NetrunnerCmp, CardCmp],

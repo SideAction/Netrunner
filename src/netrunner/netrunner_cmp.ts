@@ -50,8 +50,10 @@ export class NetrunnerCmp implements OnInit {
 
     // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
     @Input() imageDelayInSeconds: number = 5;
+    public limit: number = 40;
     public showImages = false;
     public lastSearchTime: moment.Moment;
+    public rotatedIncluded: boolean = false;
 
     public listCards: Array<Card>;
 
@@ -79,7 +81,8 @@ export class NetrunnerCmp implements OnInit {
         this.allCards = this._netrunnerService.getDistinctNamedCards();
     }
 
-    public searchCards(textToFind: string = this.searchText) {
+    public searchCards(textToFind) {
+        this.searchText = textToFind; // Have to maintain the model state
         this.matchedCards = null;
 
         console.log("Search text", textToFind);
@@ -90,13 +93,14 @@ export class NetrunnerCmp implements OnInit {
         this.lastSearchTime = moment();
         this.resetVisibleImages();
 
+
         // TODO:  Definitely do a debounce but it still might be jacked by angular timeout loop issues
         setTimeout(() => {
-            this.matchedCards = this.checkCards(this.allCards, textToFind, 80);
+            this.matchedCards = this.checkCards(this.allCards, textToFind, this.limit);
         }, 100);
     }
 
-    // Assume we would like to show the images, so just check a little after 
+    // Assume we would like to show the images, so just check a little after
     // the visibility should be present
     public resetVisibleImages() {
         this.showImages = false;
@@ -118,7 +122,12 @@ export class NetrunnerCmp implements OnInit {
         return false;
     }
 
-    public checkCards(cards: Array<Card> = this.allCards, textToFind: string = this.searchText, limit: number = 20) {
+    public checkCards(cards: Array<Card> = this.allCards, textToFind: string = '', limit: number = this.limit) {
+        textToFind = textToFind ||  this.searchText;
+        limit = limit || this.limit;
+
+        console.log("Text to find", this, textToFind);
+
         let matchingCards = cards;
         matchingCards = this.rotationFilters(matchingCards, this.rotationStates[this.rotationState]);
         matchingCards = this.selectionFilters(matchingCards);
@@ -154,10 +163,8 @@ export class NetrunnerCmp implements OnInit {
         return lookup;
     }
 
-    // TODO: All selection for each major section
-    // TODO: All selection for each cycle operation (Remove cycle filter but use check all related cycles?)
-
-    public rotationStateChange(state: number = 0) {
+    public rotationStateChange(state: number = 0, evt = null) {
+        this.swallowEvent(evt);
         this.rotationState = (this.rotationState + 1) % this.rotationStates.length;
         this.matchedCards = this.checkCards();
     }
@@ -178,6 +185,15 @@ export class NetrunnerCmp implements OnInit {
         this.matchedCards = this.checkCards();
     }
 
+    public toggleSettings(settings: Array<any>, state: boolean, evt = null) {
+        this.swallowEvent(evt);
+        _.each(settings, lookup => {
+            _.each(lookup, (val, key) => {
+                lookup[key] = state;
+            });
+        });
+        this.matchedCards = this.checkCards();
+    }
 
     // TODO: could make it so the rotation state alters the selections and just do one filter
     public toggleCycle(cycle: Cycle, state: boolean = null) {
@@ -190,7 +206,6 @@ export class NetrunnerCmp implements OnInit {
             this.packSelection[pack.code] = newState;
         });
         this.matchedCards = this.checkCards();
-
     }
 
 
@@ -269,6 +284,27 @@ export class NetrunnerCmp implements OnInit {
         this.listCards = this.selectionFilters(cards);
     }
 
+    public factionToggle(evt, setFaction: string = 'Corp') {
+        this.swallowEvent(evt);
+
+        let sideIsCorp = setFaction === 'Corp' ? true : false;
+        _.each(this.corpTypes, c => {
+            this.typeSelection[c.code] = sideIsCorp;
+        });
+        _.each(this.corpFactions, c => {
+            this.factionSelection[c.code] = sideIsCorp;
+        });
+
+        _.each(this.runnerTypes, r => {
+            this.typeSelection[r.code] = !sideIsCorp;
+        });
+        _.each(this.runnerFactions, r => {
+            this.factionSelection[r.code] = !sideIsCorp;
+        });
+        this.matchedCards = this.checkCards();
+    }
+
+
     public typeFilters() {
         this.factions = this._netrunnerService.getFactionInstances();
         this.types = this._netrunnerService.getSubTypeInstances();
@@ -286,5 +322,13 @@ export class NetrunnerCmp implements OnInit {
         this.buildSelectionLookups(this.packs, this.factions, this.types, this.cycles);
         // console.log("Hmmmm", this.typeSelection, this.packSelection, this.factionSelection, this.cycleSelection);
         this.getCardNames();
+    }
+
+
+    public swallowEvent(evt) {
+        if (evt && evt.preventDefault) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
     }
 }

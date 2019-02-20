@@ -2,6 +2,7 @@ import {async, fakeAsync, getTestBed, tick, ComponentFixture, TestBed} from '@an
 import {By} from '@angular/platform-browser';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {DebugElement} from '@angular/core';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import {NetrunnerCmp, ROTATION} from './netrunner_cmp';
@@ -22,7 +23,7 @@ fdescribe('TestingNetrunnerCmp', () => {
 
     beforeEach(async( () => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, NetrunnerModule, HttpClientTestingModule],
+            imports: [NoopAnimationsModule, RouterTestingModule, NetrunnerModule, HttpClientTestingModule],
             providers: [
                 NetrunnerService
             ]
