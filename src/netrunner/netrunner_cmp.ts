@@ -92,11 +92,12 @@ export class NetrunnerCmp implements OnInit {
 
         // TODO:  Definitely do a debounce but it still might be jacked by angular timeout loop issues
         setTimeout(() => {
-            this.matchedCards = this.checkCards(this.allCards, textToFind, 20);
+            this.matchedCards = this.checkCards(this.allCards, textToFind, 80);
         }, 100);
     }
 
-    // Assume we would like to show the images, so just check a little after the visibility should be present
+    // Assume we would like to show the images, so just check a little after 
+    // the visibility should be present
     public resetVisibleImages() {
         this.showImages = false;
         setTimeout(() => {
@@ -123,7 +124,6 @@ export class NetrunnerCmp implements OnInit {
         matchingCards = this.selectionFilters(matchingCards);
         matchingCards = this.textFilters(matchingCards, textToFind, this.searchFullText);
 
-        console.log("WAT", matchingCards.length);
         return matchingCards && matchingCards.length > limit ? matchingCards.slice(0, limit) : matchingCards;
     }
 
@@ -181,10 +181,7 @@ export class NetrunnerCmp implements OnInit {
 
     // TODO: could make it so the rotation state alters the selections and just do one filter
     public toggleCycle(cycle: Cycle, state: boolean = null) {
-        console.log("Toggling cycle", cycle, state);
-        let code = cycle.code;
-        let newState = state !== null ? state : !this.cycleSelection[code];
-        this.cycleSelection[code] = newState;
+        let newState = this.cycleSelection[cycle.code];
 
         // Now set the pack state based on the cycle (filter would be the same but UI purposes)
         let packLookup = _.groupBy(this.packs, 'cycle_code') || {};

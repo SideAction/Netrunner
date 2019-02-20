@@ -51,20 +51,18 @@
     Runner 
     <div class="runner-factions"> 
       <span *ngFor="let faction of runnerFactions">
-        <input type="checkbox" class="btn btn-xs btn-runner-type"
-          [checked]="factionSelection[faction.code]"
-          [class.btn-primary]="faction.selected"
-          (click)="toggleFaction(faction)"
-        />{{ faction.name }}
+         <mat-checkbox class="runner-faction-checkbox"
+           [(ngModel)]="factionSelection[faction.code]"
+           (click)="toggleFaction(faction)"
+        >{{ faction.name }}</mat-checkbox>
       </span>
     </div>
     <div class="runner-types">
       <span *ngFor="let type of runnerTypes">
-        <input type="checkbox" class="btn btn-xs btn-runner-types"
-          [checked]="typeSelection[type.code]"
-          [class.btn-primary]="type.selected"
+         <mat-checkbox class="runner-faction-checkbox"
+          [(ngModel)]="typeSelection[type.code]"
           (click)="toggleType(type)"
-        />{{ type.name }}
+        >{{ type.name }}</mat-checkbox>
       </span>
     </div>
   </div>
@@ -76,7 +74,10 @@
     <h4>Matching Count: {{matchedCards?.length}}</h4>
     <div *ngIf="matchedCards && matchedCards?.length > 0">
       <div *ngFor="let card of matchedCards">
-        <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
+        <mat-card>
+          <mat-card-title>{{card.title}}</mat-card-title>
+          <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
+        </mat-card>
       </div>
     </div>
   </div>
@@ -86,14 +87,15 @@
       Cycle Selection
       <div *ngIf="cycles">
         <ul *ngFor="let cycle of cycles">
-          <input type="checkbox" [checked]="cycleSelection[cycle.code]" 
-            (change)="toggleCycle(cycle)"/>
-            {{cycle.name}} : ({{cycle.size}}) Rotated: {{cycle.rotated}}
+          <mat-checkbox class="cycle-selection"
+            [(ngModel)]="cycleSelection[cycle.code]" 
+            (change)="toggleCycle(cycle)"
+          >{{cycle.name}} : ({{cycle.size}}) Rotated: {{cycle.rotated}}</mat-checkbox>
             <li *ngFor="let pack of (packListing[cycle.code] || [])">
-              <input type="checkbox" [checked]="packSelection[pack.code]"
+              <mat-checkbox class="pack-selection"
+                [(ngModel)]="packSelection[pack.code]"
                 (change)="togglePack(pack)"
-              />
-              {{pack.name}} - {{pack.date_release}} : ({{pack.size}}) 
+              >{{pack.name}} - {{pack.date_release}} : ({{pack.size}})</mat-checkbox>
             </li>
         </ul>
       </div>

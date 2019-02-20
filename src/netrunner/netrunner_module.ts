@@ -8,9 +8,17 @@ import {CardCmp} from './card_cmp';
 import {NetrunnerService} from './netrunner_service';
 
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {MatCardModule} from '@angular/material';
 
 @NgModule({
-  imports: [BrowserModule, HttpModule, FormsModule, MatButtonModule, MatCheckboxModule],
+  imports: [
+    BrowserModule,
+    HttpModule,
+    FormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatCardModule
+  ],
   declarations: [NetrunnerCmp, CardCmp],
   exports: [NetrunnerCmp, CardCmp],
   providers: [NetrunnerService]
