@@ -11,7 +11,7 @@ import {Card, Cycle, Pack} from './types';
 
 import * as _ from 'lodash';
 declare var $;
-fdescribe('TestingCardCmp', () => {
+describe('TestingCardCmp', () => {
     let fixture: ComponentFixture<CardCmp>;
     let service: NetrunnerService;
     let comp: CardCmp;

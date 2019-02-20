@@ -4,12 +4,14 @@ import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 
 import {NetrunnerCmp} from './netrunner_cmp';
+import {SearchCmp} from './search_cmp';
 import {CardCmp} from './card_cmp';
 import {NetrunnerService} from './netrunner_service';
 
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {MatCardModule} from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   imports: [
@@ -19,10 +21,11 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatGridListModule,
   ],
-  declarations: [NetrunnerCmp, CardCmp],
-  exports: [NetrunnerCmp, CardCmp],
+  declarations: [NetrunnerCmp, CardCmp, SearchCmp],
+  exports: [NetrunnerCmp, CardCmp, SearchCmp],
   providers: [NetrunnerService]
 })
 export class NetrunnerModule {}
