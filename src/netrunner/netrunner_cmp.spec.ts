@@ -61,10 +61,11 @@ describe('TestingNetrunnerCmp', () => {
     it('Can render a card', () => {
          let cards = service.getDistinctNamedCards();
          fixture.detectChanges();
-         expect($('.card-cmp').length).toBe(0, "We should start with no cards visible.");
+         expect($('.card-cmp').length).toBe(comp.limit, "We should start with no cards visible.");
 
          comp.showImages = false;
-         comp.matchedCards = [cards[0], cards[1]];
+         let evt = {cards: [cards[0], cards[1]]};
+         comp.onCardsMatch(evt);
          fixture.detectChanges();
          expect($('.card-cmp').length).toBe(2, "We should be rendering count cards");
          expect($('.card-img').length).toBe(0, "It should NOT be rendering the images.");

@@ -1,6 +1,4 @@
 <div class="search-cmp container-fluid">
-  <h3> Don't Cheat on Dat </h3>
-
   <form class="netrunner-search" #cardSearch="ngForm">
     <span class="input-group">
       <input style="width: 80%;" class="form-control" type="text" name="searchText" 
@@ -13,11 +11,11 @@
     </span>
     <label>
       <input name="searchFullText" type="radio" [value]="false"  [(ngModel)]="searchFullText">
-      Title Search
+      Title
     </label>
     <label>
       <input name="searchFullText" type="radio" [value]="true"  [(ngModel)]="searchFullText">
-      Full Text
+      Full
     </label>
   </form>
 
@@ -124,9 +122,4 @@
       </div>
     </div>
   </mat-expansion-panel>
-
-
-  <div>
-    Total Cards: {{allCards?.length}}
-  </div>
 </div>

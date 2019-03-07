@@ -1,18 +1,29 @@
-<div class="netrunner-cmp container-fluid">
-  <search-cmp
-    (cardsMatchedEvt)="onCardsMatch($event)"
-  ></search-cmp>
+<div class="netrunner-cmp">
+  <h2>Piles of Cards</h2>
+  <div class="row">
+    <div class="nr-panel search-panel">
+      <search-cmp
+        (cardsMatchedEvt)="onCardsMatch($event)"
+      ></search-cmp>
+      <div *ngIf="matchedCards?.length > limit">
+        <mat-paginator 
+          [length]="matchedCards?.length"
+          [pageSize]="limit / 4"
+          [pageSizeOptions]="[limit / 4, limit, limit * 2, limit * 3]"
+          (page)="changePage($event)"
+        ></mat-paginator>
+      </div>
+    </div>
 
-  <div>
-    <h4>Matching Count: {{matchedCards?.length}}</h4>
-    <div *ngIf="matchedCards && matchedCards?.length > 0">
-      <div *ngFor="let card of matchedCards">
-        <mat-card>
-          <mat-card-title>{{card.title}}</mat-card-title>
-          <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
-        </mat-card>
+    <div class="nr-panel view-cards-panel">
+      <div *ngIf="matchedCards?.length > 0">
+        <div *ngFor="let card of cardSegment">
+          <mat-card>
+            <mat-card-title>{{card.title}}</mat-card-title>
+            <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
+          </mat-card>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
