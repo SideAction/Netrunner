@@ -10,7 +10,7 @@ import {Card, Cycle, Pack} from './types';
 
 import * as _ from 'lodash';
 declare var $;
-fdescribe('TestingNetrunnerService', () => {
+describe('TestingNetrunnerService', () => {
     let fixture: ComponentFixture<NetrunnerService>;
     let service: NetrunnerService;
     let el: HTMLElement;

@@ -1,75 +1,8 @@
 <div class="netrunner-cmp container-fluid">
-  <h3> Don't Cheat on Dat </h3>
-  <form class="netrunner-search" #cardSearch="ngForm">
-    <span class="input-group">
-      <input style="width: 80%;" class="form-control" type="text" name="searchText" 
-       title="Filter out netrunner cards, figure out what the fuck is legal"
-       placeholder="Search for a netrunner Cards"
-       [ngModel]="searchText"
-       (ngModelChange)="searchCards($event)"
-      >
-      <span class="error" *ngIf="errMsg">{{errMsg}}</span>
-    </span>
+  <search-cmp
+    (cardsMatchedEvt)="onCardsMatch($event)"
+  ></search-cmp>
 
-    <label>
-      <input name="searchFullText" type="radio" [value]="false"  [(ngModel)]="searchFullText">
-      Title Search
-    </label>
-    <label>
-      <input name="searchFullText" type="radio" [value]="true"  [(ngModel)]="searchFullText">
-      Full Text
-    </label>
-    <label>
-      <button type="button" (click)="rotationStateChange()">
-        {{rotationStates[rotationState]}}
-      </button>
-    </label>
-  </form>
-
-
-  <div>
-    CORP | Factions | Types
-    <div class="corp-factions">
-      <span *ngFor="let faction of corpFactions">
-        <mat-checkbox class="corp-faction-checkbox" 
-          [(ngModel)]="factionSelection[faction.code]"
-          (click)="toggleFaction(faction)"
-        >{{ faction.name }}</mat-checkbox> 
-      </span>
-    </div>
-    <div class="corp-types">
-      <span *ngFor="let type of corpTypes">
-        <mat-checkbox class="corp-faction-checkbox" 
-          [(ngModel)]="typeSelection[type.code]"
-          (click)="toggleType(type)"
-        >{{ type.name }}</mat-checkbox>
-      </span>
-    </div>
-  </div>
-
-  <div>
-    Runner 
-    <div class="runner-factions"> 
-      <span *ngFor="let faction of runnerFactions">
-         <mat-checkbox class="runner-faction-checkbox"
-           [(ngModel)]="factionSelection[faction.code]"
-           (click)="toggleFaction(faction)"
-        >{{ faction.name }}</mat-checkbox>
-      </span>
-    </div>
-    <div class="runner-types">
-      <span *ngFor="let type of runnerTypes">
-         <mat-checkbox class="runner-faction-checkbox"
-          [(ngModel)]="typeSelection[type.code]"
-          (click)="toggleType(type)"
-        >{{ type.name }}</mat-checkbox>
-      </span>
-    </div>
-  </div>
-
-  <div>
-    Total Cards: {{allCards?.length}}
-  </div>
   <div>
     <h4>Matching Count: {{matchedCards?.length}}</h4>
     <div *ngIf="matchedCards && matchedCards?.length > 0">
@@ -82,24 +15,4 @@
     </div>
   </div>
 
-  <div class="nr-search-filter">
-    <div class="cycle-selection">
-      Cycle Selection
-      <div *ngIf="cycles">
-        <ul *ngFor="let cycle of cycles">
-          <mat-checkbox class="cycle-selection"
-            [(ngModel)]="cycleSelection[cycle.code]" 
-            (change)="toggleCycle(cycle)"
-          >{{cycle.name}} : ({{cycle.size}}) Rotated: {{cycle.rotated}}</mat-checkbox>
-            <li *ngFor="let pack of (packListing[cycle.code] || [])">
-              <mat-checkbox class="pack-selection"
-                [(ngModel)]="packSelection[pack.code]"
-                (change)="togglePack(pack)"
-              >{{pack.name}} - {{pack.date_release}} : ({{pack.size}})</mat-checkbox>
-            </li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
 </div>
