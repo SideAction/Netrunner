@@ -18,10 +18,14 @@
     <div class="nr-panel view-cards-panel">
       <div *ngIf="matchedCards?.length > 0">
         <div *ngFor="let card of cardSegment">
-          <mat-card>
-            <mat-card-title>{{card.title}}</mat-card-title>
+          <div class="card-{{card.faction_code}}">
+            <mat-card>
+            <mat-card-title class="card-title">
+              {{card.title}} <i class="icon icon-{{card.faction_code}}"></i>
+            </mat-card-title>
             <card-cmp [card]="card" [showImage]="showImages"></card-cmp>
           </mat-card>
+          </div>
         </div>
       </div>
     </div>

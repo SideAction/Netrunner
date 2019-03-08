@@ -1,4 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+$adam: olive;
+$anarch: orangered;
+$apex: maroon; 
+$criminal: royalblue;
+$jinteki: crimson;
+$haas-bioroid: blueviolet;
+$nbn: darkorange;
+$neutral-corp: darkgrey;
+$neutral-runner: lightgrey;
+$sunny: rebeccapurple;
+$shaper: limegreen; 
+$weyland-consortium: darkgreen;
+
+@mixin cardBorder( $color: black ) {
+  border-left: 5px solid $color;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0;
+}
+
 .row {
   display: flex;
 }
@@ -30,9 +49,58 @@
   }
 }
 
-.search-panel {
+.card-neutral-corp {
+  @include cardBorder($neutral-corp);
 }
 
+.card-neutral-runner {
+  @include cardBorder($neutral-runner);
+}
+
+
+.card-criminal {
+  @include cardBorder($criminal);
+}
+
+.card-shaper {
+  @include cardBorder($shaper);
+}
+
+.card-haas-bioroid {
+  @include cardBorder($haas-bioroid);
+}
+
+.card-jinteki {
+  @include cardBorder($jinteki);
+}
+
+.card-nbn {
+  @include cardBorder($nbn);
+}
+
+.card-weyland-consortium {
+  @include cardBorder($weyland-consortium);
+}
+
+.apex {
+  @include cardBorder($apex);
+}
+
+.card-adam {
+  @include cardBorder($adam);
+}
+
+.card-sunny-lebeau {
+  @include cardBorder($sunny) 
+}
+
+.card-anarch {
+  @include cardBorder($anarch)
+}
+
+.search-panel {
+
+}
 
 .view-cards-panel {
 }

@@ -64,6 +64,8 @@ export class SearchCmp implements OnInit {
     public typeSelection = null; // Card type (code gate etc)
     public cycleSelection = null;  // Cycle filtering (further impacted by pack)
 
+    public fcodes: any = {};
+
     constructor(public _netrunnerService: NetrunnerService) {
 
     }
@@ -77,6 +79,9 @@ export class SearchCmp implements OnInit {
             this.typeFilters();
         }
         this.checkCards();
+
+        let cards = _.groupBy(this.allCards, 'faction_code');
+        this.fcodes = Object.keys(cards);
     }
 
     public loadCards() {

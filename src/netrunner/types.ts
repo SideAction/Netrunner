@@ -87,6 +87,7 @@ export class Card {
 
     public title: string; // "Synthetic Systems: The World Re-imagined",
     public title_lower: string; // Simpler compare
+    public cost: number;
     public type_code: string; // "identity"
     public uniqueness: boolean; // wtf is this?
 
