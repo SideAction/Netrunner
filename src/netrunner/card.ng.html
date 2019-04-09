@@ -6,8 +6,11 @@
     > 
       <div class="row">
         <span class="card-text">{{card.text}}</span>
-        <span class="card-cost" *ngIf="card.cost !== undefined"> 
-          COST: {{card.cost}}
+        <span class="card-cost" *ngIf="showCardCost && card.cost !== undefined"> 
+          {{card.cost}}
+        </span>
+        <span class="agenda-info" *ngIf="card.advancement_cost !== undefined">
+          {{card.agenda_points}}/{{card.advancement_cost}}
         </span>
       </div>
 
