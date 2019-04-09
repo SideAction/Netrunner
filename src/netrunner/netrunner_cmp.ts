@@ -16,7 +16,7 @@ export class NetrunnerCmp implements OnInit {
     // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
     @Input() imageDelayInSeconds: number = 5;
     public limit: number = 40;
-    public showImages = false;
+    public showImages = true;
     public lastSearchTime: moment.Moment;
 
     public matchedCards: Array<Card>;
