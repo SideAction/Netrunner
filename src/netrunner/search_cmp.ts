@@ -52,7 +52,6 @@ export class SearchCmp implements OnInit {
 
     // We don't want to instance make netrunnerDB image loads until the user is probalby done searching
     @Input() imageDelayInSeconds: number = 5;
-    public limit: number = 40;
     public showImages = false;
     public lastSearchTime: moment.Moment;
     public rotatedIncluded: boolean = false;
@@ -64,6 +63,8 @@ export class SearchCmp implements OnInit {
     public factionSelection = null; // selection on a faction basis
     public typeSelection = null; // Card type (code gate etc)
     public cycleSelection = null;  // Cycle filtering (further impacted by pack)
+
+    public fcodes: any = {};
 
     constructor(public _netrunnerService: NetrunnerService) {
 
@@ -77,6 +78,10 @@ export class SearchCmp implements OnInit {
         if (!this.factions) {
             this.typeFilters();
         }
+        this.checkCards();
+
+        let cards = _.groupBy(this.allCards, 'faction_code');
+        this.fcodes = Object.keys(cards);
     }
 
     public loadCards() {
@@ -94,23 +99,23 @@ export class SearchCmp implements OnInit {
 
         // TODO:  Definitely do a debounce but it still might be jacked by angular timeout loop issues
         setTimeout(() => {
-            this.matchedCards = this.checkCards(this.allCards, textToFind, this.limit);
+            this.matchedCards = this.checkCards(this.allCards, textToFind);
         }, 100);
     }
 
-    public checkCards(cards: Array<Card> = this.allCards, textToFind: string = '', limit: number = this.limit) {
+    public checkCards(cards: Array<Card> = this.allCards, textToFind: string = '', limit: number = null) {
         textToFind = textToFind ||  this.searchText;
-        limit = limit || this.limit;
 
         let matchingCards = cards;
         matchingCards = this.rotationFilters(matchingCards, this.rotationStates[this.rotationState]);
         matchingCards = this.selectionFilters(matchingCards);
         matchingCards = this.textFilters(matchingCards, textToFind, this.searchFullText);
 
-        let wtf = {cards: matchingCards};
-        this.cardsMatchedEvt.emit(wtf);
-        console.log("Emit Event", wtf);
-        return matchingCards && matchingCards.length > limit ? matchingCards.slice(0, limit) : matchingCards;
+        if (limit) {
+            matchingCards = matchingCards.length > limit ? matchingCards.splice(0, limit) : matchingCards;
+        }
+        this.cardsMatchedEvt.emit({cards: matchingCards});
+        return matchingCards;
     }
 
     public setupFilter() {

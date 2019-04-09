@@ -1,14 +1,28 @@
 <div class="card-cmp">
   <div *ngIf="card">
-    <div class="card-details" [class.card-legal]="card?.can_play" [class.card-banned]="!card.can_play">
-      <span class="col-md-4 card-img" *ngIf="showImage && card?.image_url">
+    <div class="card-details {{card.faction_code}}" 
+      [class.card-legal]="card?.can_play" 
+      [class.card-banned]="!card.can_play"
+    > 
+      <div class="row">
+        <span class="card-text">{{card.text}}</span>
+        <span class="card-cost" *ngIf="card.cost !== undefined"> 
+          COST: {{card.cost}}
+        </span>
+      </div>
+
+
+      <span class="card-img" *ngIf="false && showImage && card?.image_url">
         <img [src]="card.image_url">
       </span>
-      <span class="col-md-3 card-detail">{{card.title}}</span>
-      <span class="col-md-1 card-detail">{{card.faction_code}}</span>
-      <span class="col-md-2 card-detail">{{card?.pack?.cycle?.name}}</span>
-      <span class="col-md-1 card-detail">{{card.faction_cost}}</span>
-      <span class="col-md-1 card-detail">{{card.can_play ? "Legal" : "Banned"}}</span>
+
+      <span class="card-detail">{{card.faction_code}}</span>
+
+      <span class="card-detail">{{card?.pack?.cycle?.name}}</span>
+
+      <span class="card-detail">{{card.faction_cost}}</span>
+
+      <span class="card-detail">{{card.can_play ? "Legal" : "Banned"}}</span>
       <!-- Could add the image but that is a lot of extra size & data, probably just on click / timeout loop -->
     </div>
   </div>

@@ -20,6 +20,7 @@ export class NetrunnerCmp implements OnInit {
     public lastSearchTime: moment.Moment;
 
     public matchedCards: Array<Card>;
+    public cardSegment: Array<Card>;
 
 
     constructor(public _netrunnerService: NetrunnerService) {
@@ -53,11 +54,17 @@ export class NetrunnerCmp implements OnInit {
         return false;
     }
 
+    public changePage(evt) {
+        console.log("Change page", evt);
+    }
 
     public onCardsMatch(evt) {
         console.log("On Cards Match", evt);
         this.lastSearchTime = moment();
         this.resetVisibleImages();
-        this.matchedCards = _.get(evt, 'cards') || [];
+
+        const cards = _.get(evt, 'cards') || [];
+        this.matchedCards = cards;
+        this.cardSegment = cards.length > this.limit ? cards.slice(0, this.limit) : cards;
     }
 }

@@ -12,6 +12,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {MatCardModule} from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatCardModule,
     MatExpansionModule,
     MatGridListModule,
+    MatPaginatorModule,
   ],
   declarations: [NetrunnerCmp, CardCmp, SearchCmp],
   exports: [NetrunnerCmp, CardCmp, SearchCmp],

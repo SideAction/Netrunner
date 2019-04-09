@@ -55,7 +55,7 @@ describe('TestingSearchCmp', () => {
 
         let searchFullText = true;
         let fullTextNoise = comp.textFilters(comp.allCards, 'Noise', searchFullText);
-        expect(fullTextNoise.length).toBe(9, "There appear to be about 11 of these");
+        expect(fullTextNoise.length).toBe(9, "There appear to be about this many of these");
 
         // Now enable all the other filters, and use the checkCards (uses all filters)
         fixture.detectChanges();
