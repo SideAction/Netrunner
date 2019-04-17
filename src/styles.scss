@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Assign to the different checkboxes and such
+$runner: red;
+$corp: blue;
+
+// Various faction specific colors and styling elements
 $adam: olive;
 $anarch: orangered;
 $apex: maroon; 
@@ -66,60 +72,41 @@ $weyland-consortium: darkgreen;
   border-left: 5px solid $color;
   border-radius: 5px;
   margin: 0.5rem 0 0.5rem 0;
-}
-
-.card-neutral-corp {
-  @include cardBorder($neutral-corp);
-}
-
-.card-neutral-runner {
-  @include cardBorder($neutral-runner);
-}
-
-.card-criminal {
-  @include cardBorder($criminal);
-}
-
-.card-shaper {
-  @include cardBorder($shaper);
-}
-
-.card-haas-bioroid {
-  @include cardBorder($haas-bioroid);
-}
-
-.card-jinteki {
-  @include cardBorder($jinteki);
-}
-
-.card-nbn {
-  @include cardBorder($nbn);
-}
-
-.card-weyland-consortium {
-  @include cardBorder($weyland-consortium);
-}
-
-.card-apex {
-  @include cardBorder($apex);
-}
-
-.card-adam {
-  @include cardBorder($adam);
-}
-
-.card-sunny-lebeau {
-  @include cardBorder($sunny) 
-}
-
-.card-anarch {
-  @include cardBorder($anarch)
-}
-
-.search-panel {
 
 }
 
-.view-cards-panel {
+@mixin faction-cls ($color: black, $name: '') {
+  .card-#{$name} { 
+      @include cardBorder($color);
+  }
+
+  .bg-#{$name} {
+    background-color: $color;
+    border-radius: 2px;
+    border: 1px solid darken($color, 20%);
+  }
+    
+  #{$name} {
+    text-color: $color;
+  }
 }
+
+
+.nr-page {
+  @include faction-cls($neutral-corp, 'neutral-corp');
+  @include faction-cls($neutral-runner, 'neutral-runner');
+  @include faction-cls($criminal, 'criminal');
+  @include faction-cls($shaper, 'shaper');
+  @include faction-cls($haas-bioroid, 'haas-bioroid');
+  @include faction-cls($jinteki, 'jinteki');
+  @include faction-cls($nbn, 'nbn');
+  @include faction-cls($weyland-consortium, 'weyland-consortium');
+  @include faction-cls($apex, 'apex');
+  @include faction-cls($adam, 'adam');
+  @include faction-cls($sunny, 'sunny-lebeau');
+  @include faction-cls($anarch, 'anarch');
+}
+
+
+
 
