@@ -68,5 +68,13 @@ describe('TestingCardCmp', () => {
         expect($('.card-img').length).toBe(1, "Now we should be showing an image.");
     });
 
+    it("Will render a card", () => {
+        let card = new Card({title: 'TITLE', text: "some shit it does", image_url: "pass", code: "0"});
+        comp.card = card;
+
+        fixture.detectChanges();
+        expect($('.card-text').text()).toBe(card.text);
+    });
+
 });
 
