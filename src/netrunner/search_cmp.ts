@@ -21,7 +21,7 @@ export class SearchCmp implements OnInit {
 
     public throttleFilter: Subscription;
     public searchText: string;
-    @ViewChild('cardSearch') cardSearch;
+    @ViewChild('cardSearch', { static: true }) cardSearch;
 
     @Input() allCards: Array<Card>;
     @Input() bannedCards: Array<Card>;
