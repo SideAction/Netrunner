@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+.row {
+  display: flex; }
+
+@media (max-width: 575.98px) {
+  .nr-panel {
+    width: 100%; } }
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .nr-panel {
+    width: 100%; } }
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .nr-panel {
+    width: 100%; } }
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .nr-panel {
+    flex: 49%; } }
+
+@media (min-width: 1200px) {
+  .nr-panel {
+    flex: 49%; } }
+
+.card-cost {
+  float: right;
+  border-radius: 10px;
+  text-align: center;
+  width: 1.5em;
+  height: 1.2em;
+  background-color: lightgrey; }
+
+.agenda-info {
+  float: right;
+  border-radius: 2px;
+  text-align: center;
+  height: 1.2em;
+  padding: 0.2em;
+  background-color: #e6e600; }
+
+.nr-page .card-neutral-corp {
+  border-left: 5px solid darkgrey;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.nr-page .text-neutral-corp {
+  background-color: darkgrey;
+  border-radius: 2px;
+  border: 1px solid darkent(darkgrey, 20%); }
+
+.nr-page .card-neutral-runner {
+  border-left: 5px solid lightgrey;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.nr-page .text-neutral-runner {
+  background-color: lightgrey;
+  border-radius: 2px;
+  border: 1px solid darkent(lightgrey, 20%); }
+
+.nr-page .card-criminal {
+  border-left: 5px solid royalblue;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.nr-page .text-criminal {
+  background-color: royalblue;
+  border-radius: 2px;
+  border: 1px solid darkent(royalblue, 20%); }
+
+.nr-page .card-shaper {
+  border-left: 5px solid limegreen;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.nr-page .text-shaper {
+  background-color: limegreen;
+  border-radius: 2px;
+  border: 1px solid darkent(limegreen, 20%); }
+
+.card-haas-bioroid {
+  border-left: 5px solid blueviolet;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-jinteki {
+  border-left: 5px solid crimson;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-nbn {
+  border-left: 5px solid darkorange;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-weyland-consortium {
+  border-left: 5px solid darkgreen;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-apex {
+  border-left: 5px solid maroon;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-adam {
+  border-left: 5px solid olive;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-sunny-lebeau {
+  border-left: 5px solid rebeccapurple;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
+
+.card-anarch {
+  border-left: 5px solid orangered;
+  border-radius: 5px;
+  margin: 0.5rem 0 0.5rem 0; }
