@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 
 import {NetrunnerCmp} from './netrunner_cmp';
@@ -17,7 +17,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 @NgModule({
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,
