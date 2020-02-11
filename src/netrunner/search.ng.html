@@ -43,14 +43,16 @@
       <div class="corp-factions">
         <span *ngFor="let faction of corpFactions">
           <mat-checkbox class="corp-faction-checkbox" 
+            color="primary"
             [(ngModel)]="factionSelection[faction.code]"
             (change)="toggleFaction(faction)"
-          >{{ faction.name }}</mat-checkbox> 
+          ><span class="{{faction.code}}">{{ faction.name }}</span></mat-checkbox> 
         </span>
       </div>
       <div class="corp-types">
         <span *ngFor="let type of corpTypes">
           <mat-checkbox class="corp-faction-checkbox" 
+            color="primary"
             [(ngModel)]="typeSelection[type.code]"
             (change)="toggleType(type)"
           >{{ type.name }}</mat-checkbox>
@@ -63,6 +65,7 @@
       <div class="runner-factions"> 
         <span *ngFor="let faction of runnerFactions">
            <mat-checkbox class="runner-faction-checkbox"
+             color="warn"
              [(ngModel)]="factionSelection[faction.code]"
              (change)="toggleFaction(faction)"
           >{{ faction.name }}</mat-checkbox>
@@ -70,7 +73,8 @@
       </div>
       <div class="runner-types">
         <span *ngFor="let type of runnerTypes">
-           <mat-checkbox class="runner-faction-checkbox"
+          <mat-checkbox class="runner-faction-checkbox"
+            color="warn"
             [(ngModel)]="typeSelection[type.code]"
             (change)="toggleType(type)"
           >{{ type.name }}</mat-checkbox>
